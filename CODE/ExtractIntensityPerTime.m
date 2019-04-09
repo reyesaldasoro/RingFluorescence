@@ -1,4 +1,4 @@
-% analysePhagoCytosis
+%% analysePhagoCytosis
 if strcmp(filesep,'/')
     % Running in Mac
     addpath('/Users/ccr22/Academic/GitHub/ThreeD_Fluorescence/CODE')
@@ -42,7 +42,7 @@ Intensity_OverTime_3(lengthTrack,21)    = 0;
 
 % Loop for the tracks
 
-for counterT = 1:10:lengthTrack
+for counterT = 1:1:lengthTrack
     % Load the data
     load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
     % Find the max intensity projection
