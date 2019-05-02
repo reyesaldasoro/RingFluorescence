@@ -44,7 +44,7 @@ maxIntensityF                           = 9000;
 
 % Loop for the tracks
 
-for counterT =  1:10:lengthTrack
+for counterT =  1:1:lengthTrack
     % Load the data
     load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
     % Find the max intensity projection
@@ -112,23 +112,26 @@ for counterT =  1:10:lengthTrack
 end
 
 
-%%
+%% Display the Intensity PER Time point from the CENTRE of the track 
 
 figure
 subplot(211)
+% intensity in the red channel
 mesh(Intensity_OverTime_2)
 view(80,60)
 axis tight; grid on
 subplot(212)
+% intensity in the green channel
 mesh(Intensity_OverTime_1)
 view(80,60)
+axis tight; grid on
 colormap jet
 
 ylabel('time')
 xlabel('distance from centroid')
 zlabel('intensity')
 
-%%
+%% Display the Intensity PER time point around the ring 
 figure
 
 mesh(Intensity_OverTime_3)
@@ -141,5 +144,20 @@ zlabel('intensity')
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',-pi:0.9:pi)
 filename = 'AvIntensities_angle_time3.png';
-axis([0 21 351 550 1 3e5])
+axis tight
+
+%% Display the average values PER TIME
+
+figure
+
+plot(mean(Intensity_OverTime_3,2))
+
+grid on;axis tight
+colormap jet
+ylabel('intensity')
+xlabel('time')
+zlabel('intensity')
+filename = 'AvIntensities_angle_time4.png';
+axis tight
+
 
