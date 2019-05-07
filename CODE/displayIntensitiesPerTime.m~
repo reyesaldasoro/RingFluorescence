@@ -75,9 +75,6 @@ figure
 clf
 hold on
 for selectTrack=1:numTracks
-    plot3(repmat(selectTrack,[size(tracks{selectTrack},1) 1]),tracks{selectTrack}(:,1),max(trackIntensities{2,selectTrack},[],2),'r','linewidth',2)
-    plot3(repmat(selectTrack,[size(tracks{selectTrack},1) 1]),tracks{selectTrack}(:,1),max(trackIntensities{1,selectTrack},[],2),'g','linewidth',2)    
+plot3(repmat(selectTrack,[size(tracks{selectTrack},1) 1]),tracks{selectTrack}(:,1),max(trackIntensities{2,selectTrack},[],2))
+
 end
-view(70,45)
-grid on
-axis tight

@@ -30,7 +30,7 @@ clear Intensity_Over*
 
 
 % variable to select(1) or not to (0) the display
-displayTracking                         = 0;
+displayTracking                         = 1;
 numTracks                               =  size(tracks,2);
 
 % Set the dimensions of the ring
@@ -40,7 +40,7 @@ maxIntensityF                           = 9000;
 
 
 %Iterate over all the tracks
-for selectTrack = 1:numTracks
+for selectTrack = 2% 1:numTracks
     %selectTrack                             = 3;
     lengthTrack                             = size(tracks{selectTrack},1);
     clear avIntensity* Intensity_Over* IntensityPer*
