@@ -11,7 +11,7 @@ else
     addpath('D:\Acad\GitHub\ThreeD_Fluorescence\CODE')
     baseDir             = 'D:\OneDrive - City, University of London\Acad\Research\Sheffield\SingleSlice_mat_Or\';
     dir1                = dir (strcat(baseDir,'*.mat'));
-    tracks              = readTracksXML('Cropped z7-14_Tracks.xml');   
+    tracks              = readTracksXML('Cropped z7-14_Tracks.xml');
 end
 
 %% Read first image for dimensions
@@ -27,92 +27,115 @@ angle_view          = angle(xx_t+1i*yy_t);
 
 %% find intensity per distance
 clear Intensity_Over*
-selectTrack         = 4;
-lengthTrack         = size(tracks{selectTrack},1);
-
-%plot(1:30,avIntensity_1,1:30,avIntensity_2)
-avIntensity_1(30)                       = 0;
-avIntensity_2(30)                       = 0;
-Intensity_OverTime_1(lengthTrack,30)    = 0;
-Intensity_OverTime_2(lengthTrack,30)    = 0;
-IntensityPerAngleT(21)                  = 0;
-Intensity_OverTime_3(lengthTrack,21)    = 0;
 
 
+% variable to select(1) or not to (0) the display
+displayTracking                         = 0;
+numTracks                               =  size(tracks,2);
+
+% Set the dimensions of the ring
 dimensionsRing                          = [9 24];
+% Set a maximum level for display purposes
 maxIntensityF                           = 9000;
 
-% Loop for the tracks
 
-for counterT =  1:1:lengthTrack
-    % Load the data
-    load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
-    % Find the max intensity projection
-    %channel_1       = double(mean(dataIn(:,:,1:2:end),3));
-    %channel_2       = double(mean(dataIn(:,:,2:2:end),3));
-    channel_1       = double(max(dataIn(:,:,1:2:end),[],3));
-    channel_2       = double(max(dataIn(:,:,2:2:end),[],3));
+%Iterate over all the tracks
+for selectTrack = 1:numTracks
+    %selectTrack                             = 3;
+    lengthTrack                             = size(tracks{selectTrack},1);
+    clear avIntensity* Intensity_Over* IntensityPer*
     
-    % update the centroid
-    centroid_Row            = tracks{selectTrack}(counterT,3);
-    centroid_Col            = tracks{selectTrack}(counterT,2);
-    
-    % distance transform from centroid
-    distFromTrack           = zeros(rows,cols);
-    distFromTrack(centroid_Row,centroid_Col)=1;
-    distFromTrack           = bwdist(distFromTrack);
+    %plot(1:30,avIntensity_1,1:30,avIntensity_2)
+    avIntensity_1(30)                       = 0;
+    avIntensity_2(30)                       = 0;
+    Intensity_OverTime_1(lengthTrack,30)    = 0;
+    Intensity_OverTime_2(lengthTrack,30)    = 0;
+    IntensityPerAngleT(21)                  = 0;
+    Intensity_OverTime_3(lengthTrack,21)    = 0;
     
     
-    % find distance and intensity 
-    for k=1:30
-        avIntensity_1(k)      = mean(channel_1(distFromTrack==k));
-        avIntensity_2(k)      = mean(channel_2(distFromTrack==k));
+    
+    
+    % Loop for the tracks
+    
+    for counterT =  1:1:lengthTrack
+        disp([ selectTrack counterT])
+        % Load the data
+        load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
+        % Find the max intensity projection
+        %channel_1       = double(mean(dataIn(:,:,1:2:end),3));
+        %channel_2       = double(mean(dataIn(:,:,2:2:end),3));
+        channel_1       = double(max(dataIn(:,:,1:2:end),[],3));
+        channel_2       = double(max(dataIn(:,:,2:2:end),[],3));
+        
+        % update the centroid
+        centroid_Row            = tracks{selectTrack}(counterT,3);
+        centroid_Col            = tracks{selectTrack}(counterT,2);
+        
+        % distance transform from centroid
+        distFromTrack           = zeros(rows,cols);
+        distFromTrack(centroid_Row,centroid_Col)=1;
+        distFromTrack           = bwdist(distFromTrack);
+        
+        
+        % find distance and intensity
+        for k=1:30
+            avIntensity_1(k)      = mean(channel_1(distFromTrack==k));
+            avIntensity_2(k)      = mean(channel_2(distFromTrack==k));
+        end
+        Intensity_OverTime_1(counterT,: ) =avIntensity_1;
+        Intensity_OverTime_2(counterT,: ) =avIntensity_2;
+        dataOut(:,:,2)      = channel_1/max(channel_1(:));
+        dataOut(:,:,1)      = channel_2/max(channel_2(:));
+        %dataOut(:,:,3)      = 0;
+        %dataOut(centroid_Row-12:centroid_Row-10,centroid_Col-10:centroid_Col+10,3) = 1;
+        %     dataOut(centroid_Row+10:centroid_Row+12,centroid_Col-10:centroid_Col+10,3) = 1;
+        %     dataOut(centroid_Row-10:centroid_Row+10,centroid_Col-12:centroid_Col-10,3) = 1;
+        %     dataOut(centroid_Row-10:centroid_Row+10,centroid_Col+10:centroid_Col+12,3) = 1;
+        dataOut(:,:,3)      = 0.605*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
+        
+        %imagesc([channel_1 channel_2])
+        
+        % find intensity of ring and per angle
+        
+        intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
+        intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
+        
+        for counterA=-pi:0.3:pi
+            intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+            IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
+        end
+        Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
+        
+        % Only display if necessary
+        if displayTracking ==1
+            % Display
+            subplot(121)
+            imagesc(dataOut)
+            title(num2str(counterT))
+            drawnow
+            pause(0.001)
+            subplot(222)
+            imagesc(intensityRingC)
+            % Fix the intensity of the ring to a value to avoid having jumps
+            caxis([1 maxIntensityF])
+            colorbar
+            subplot(224)
+            plot(IntensityPerAngleT)
+            axis([1 21 0 maxIntensityF ])
+            grid on
+            set(gca,'xtick',1:3:21)
+            set(gca,'xticklabel',-pi:0.9:pi)
+        end
     end
-    Intensity_OverTime_1(counterT,: ) =avIntensity_1;
-    Intensity_OverTime_2(counterT,: ) =avIntensity_2;    
-    dataOut(:,:,2)      = channel_1/max(channel_1(:));
-    dataOut(:,:,1)      = channel_2/max(channel_2(:));
-    %dataOut(:,:,3)      = 0;
-    %dataOut(centroid_Row-12:centroid_Row-10,centroid_Col-10:centroid_Col+10,3) = 1;
-%     dataOut(centroid_Row+10:centroid_Row+12,centroid_Col-10:centroid_Col+10,3) = 1;
-%     dataOut(centroid_Row-10:centroid_Row+10,centroid_Col-12:centroid_Col-10,3) = 1;
-%     dataOut(centroid_Row-10:centroid_Row+10,centroid_Col+10:centroid_Col+12,3) = 1;
-    dataOut(:,:,3)      = 0.605*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
     
-    %imagesc([channel_1 channel_2])
     
-    % find intensity of ring and per angle
-
-    intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
-    intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
-
-    for counterA=-pi:0.3:pi
-        intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
-        IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
-    end
-     Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;        
-    
-    % Display
-    subplot(121)
-    imagesc(dataOut)
-    title(num2str(counterT))
-    drawnow
-    pause(0.001)
-    subplot(222)
-    imagesc(intensityRingC)
-    % Fix the intensity of the ring to a value to avoid having jumps
-    caxis([1 maxIntensityF])
-    colorbar
-    subplot(224)
-    plot(IntensityPerAngleT)
-    axis([1 21 0 maxIntensityF ])
-    grid on
-    set(gca,'xtick',1:3:21)
-    set(gca,'xticklabel',-pi:0.9:pi)
+    % Save the individual values of each track
+    trackIntensities{1,selectTrack} = Intensity_OverTime_1;
+    trackIntensities{2,selectTrack} = Intensity_OverTime_2;
+    trackIntensities{3,selectTrack} = Intensity_OverTime_3;
 end
-
-
-%% Display the Intensity PER Time point from the CENTRE of the track 
+%% Display the Intensity PER Time point from the CENTRE of the track
 
 figure
 subplot(211)
@@ -131,7 +154,7 @@ ylabel('time')
 xlabel('distance from centroid')
 zlabel('intensity')
 
-%% Display the Intensity PER time point around the ring 
+%% Display the Intensity PER time point around the ring
 figure
 
 mesh(Intensity_OverTime_3)
