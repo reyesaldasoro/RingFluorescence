@@ -1,3 +1,9 @@
+%% Clear all variables and close all figures
+clear all
+close all
+clc
+
+
 %% analysePhagoCytosis
 if strcmp(filesep,'/')
     % Running in Mac
@@ -25,12 +31,26 @@ load(strcat(baseDir,dir1(tracks{1}(1,1)+1).name));
 [xx_t,yy_t]         = meshgrid(-30:30,-30:30);
 angle_view          = angle(xx_t+1i*yy_t);
 
+% variable to select(1) or not to (0) the display
+displayTracking                         = 1;
+
+
+
+
+
 %% find intensity per distance
+
+if displayTracking==1
+    fig             = figure(1);
+    fig.Position    = [100 200 800 400];
+    fig.Colormap    = jet;
+end
+%%
+
 clear Intensity_Over*
 
 
-% variable to select(1) or not to (0) the display
-displayTracking                         = 1;
+
 numTracks                               =  size(tracks,2);
 
 % Set the dimensions of the ring
@@ -40,25 +60,25 @@ maxIntensityF                           = 9000;
 
 
 %Iterate over all the tracks
-for selectTrack = 4% 1:numTracks
+%for selectTrack = 4% 1:numTracks
     %selectTrack                             = 3;
-    lengthTrack                             = size(tracks{selectTrack},1);
+    lengthTrack{selectTrack}                = size(tracks{selectTrack},1);
     clear avIntensity* Intensity_Over* IntensityPer*
     
     %plot(1:30,avIntensity_1,1:30,avIntensity_2)
-    avIntensity_1(30)                       = 0;
-    avIntensity_2(30)                       = 0;
-    Intensity_OverTime_1(lengthTrack,30)    = 0;
-    Intensity_OverTime_2(lengthTrack,30)    = 0;
-    IntensityPerAngleT(21)                  = 0;
-    Intensity_OverTime_3(lengthTrack,21)    = 0;
-    
+    avIntensity_1(30,numTracks)                       = 0;
+    avIntensity_2(30,numTracks)                       = 0;
+%     Intensity_OverTime_1(lengthTrack,30)    = 0;
+%     Intensity_OverTime_2(lengthTrack,30)    = 0;
+%     IntensityPerAngleT(21)                  = 0;
+%     Intensity_OverTime_3(lengthTrack,21)    = 0;
+%     
     
     
     
     % Loop for the tracks
     
-    for counterT =  1:5:lengthTrack
+    for counterT =  300:5:lengthTrack
         disp([ selectTrack counterT])
         % Load the data
         load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
@@ -69,19 +89,20 @@ for selectTrack = 4% 1:numTracks
         channel_2       = double(max(dataIn(:,:,2:2:end),[],3));
         
         % update the centroid
-        centroid_Row            = tracks{selectTrack}(counterT,3);
-        centroid_Col            = tracks{selectTrack}(counterT,2);
-        
+        for selectTrack = 1:numTracks
+        centroid_Row{selectTrack}            = tracks{selectTrack}(counterT,3);
+        centroid_Col{selectTrack}            = tracks{selectTrack}(counterT,2);
+        end
         % distance transform from centroid
-        distFromTrack           = zeros(rows,cols);
-        distFromTrack(centroid_Row,centroid_Col)=1;
-        distFromTrack           = bwdist(distFromTrack);
+        distFromTrack{selectTrack}           = zeros(rows,cols);
+        distFromTrack{selectTrack}(centroid_Row{selectTrack},centroid_Col{selectTrack})=1;
+        distFromTrack{selectTrack}           = bwdist(distFromTrack{selectTrack});
         
         
         % find distance and intensity
         for k=1:30
-            avIntensity_1(k)      = mean(channel_1(distFromTrack==k));
-            avIntensity_2(k)      = mean(channel_2(distFromTrack==k));
+            avIntensity_1(k)      = mean(channel_1(distFromTrack{selectTrack}==k));
+            avIntensity_2(k)      = mean(channel_2(distFromTrack{selectTrack}==k));
         end
         Intensity_OverTime_1(counterT,: ) =avIntensity_1;
         Intensity_OverTime_2(counterT,: ) =avIntensity_2;
@@ -99,7 +120,7 @@ for selectTrack = 4% 1:numTracks
         % find intensity of ring and per angle
         
         intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
-        intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
+        intensityRingC      = intensityRing(centroid_Row{selectTrack}-30:centroid_Row{selectTrack}+30,centroid_Col{selectTrack}-30:centroid_Col{selectTrack}+30);
         
         for counterA=-pi:0.3:pi
             intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
@@ -134,7 +155,7 @@ for selectTrack = 4% 1:numTracks
     trackIntensities{1,selectTrack} = Intensity_OverTime_1;
     trackIntensities{2,selectTrack} = Intensity_OverTime_2;
     trackIntensities{3,selectTrack} = Intensity_OverTime_3;
-end
+%end
 %% Display the Intensity PER Time point from the CENTRE of the track
 
 figure
