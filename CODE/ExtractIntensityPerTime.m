@@ -40,7 +40,7 @@ maxIntensityF                           = 9000;
 
 
 %Iterate over all the tracks
-for selectTrack = 2% 1:numTracks
+for selectTrack = 4% 1:numTracks
     %selectTrack                             = 3;
     lengthTrack                             = size(tracks{selectTrack},1);
     clear avIntensity* Intensity_Over* IntensityPer*
@@ -58,7 +58,7 @@ for selectTrack = 2% 1:numTracks
     
     % Loop for the tracks
     
-    for counterT =  1:1:lengthTrack
+    for counterT =  1:5:lengthTrack
         disp([ selectTrack counterT])
         % Load the data
         load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
