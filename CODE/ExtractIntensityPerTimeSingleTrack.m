@@ -24,6 +24,7 @@ load(strcat(baseDir,dir1(tracks{1}(1,1)+1).name));
 
 [xx_t,yy_t]         = meshgrid(-30:30,-30:30);
 angle_view          = angle(xx_t+1i*yy_t);
+xticksL                             = {'-3.1','-2.2','-1.3','-0.4','0.4','1.4','2.3'};
 
 %% find intensity per distance
 clear Intensity_Over*
@@ -40,7 +41,7 @@ maxIntensityF                           = 9000;
 
 
 %Iterate over all the tracks
-for selectTrack = 4% 1:numTracks
+for selectTrack = 1% 1:numTracks
     %selectTrack                             = 3;
     lengthTrack                             = size(tracks{selectTrack},1);
     clear avIntensity* Intensity_Over* IntensityPer*
@@ -125,7 +126,7 @@ for selectTrack = 4% 1:numTracks
             axis([1 21 0 maxIntensityF ])
             grid on
             set(gca,'xtick',1:3:21)
-            set(gca,'xticklabel',-pi:0.9:pi)
+           set(gca,'xticklabel',xticksL)
         end
     end
     
