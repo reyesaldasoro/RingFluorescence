@@ -169,6 +169,7 @@ for counterT = 1:1:numTimeFrames
         grid on
         set(gca,'xtick',1:3:21)
         set(gca,'xticklabel',xticksL)
+        % Grab a frame to save videos
         F(counterT) = getframe();
     end
 end
