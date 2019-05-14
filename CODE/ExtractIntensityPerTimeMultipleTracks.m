@@ -49,7 +49,7 @@ centroid_Col(numTracks)             = 0 ;
 distFromTrack(rows,cols,numTracks)  = 0;
 xticksL                             = {'-3.1','-2.2','-1.3','-0.4','0.4','1.4','2.3'};
 %% process the intensities of the rings
-clear Intensity_Over*
+clear Intensity_Over* F*
 clear avIntensity* Intensity_Over* IntensityPer*
 % Set the dimensions of the ring
 dimensionsRing                          = [9 24];
@@ -66,9 +66,10 @@ Intensity_OverTime_3(21,numTracks,numTimeFrames)    = 0;
 currentRingIntensities(rows,cols,numTracks)         = 0;
 currentRingsC(61,61,1,numTracks)                    = 0;
 IntensityPerAngleT(21)                              = 0;
+
 %%
 % Loop over time
-for counterT = 1:5:numTimeFrames
+for counterT = 1:1:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
@@ -153,7 +154,7 @@ for counterT = 1:5:numTimeFrames
         drawnow
         pause(0.001)
         subplot(222)
-        imagesc(intensityRingC)
+        %imagesc(intensityRingC)
 
         montage((currentRingsC),'DisplayRange', [0 maxIntensityF])
         colormap jet
@@ -168,7 +169,7 @@ for counterT = 1:5:numTimeFrames
         grid on
         set(gca,'xtick',1:3:21)
         set(gca,'xticklabel',xticksL)
- 
+        F(counterT) = getframe();
     end
 end
 
@@ -181,49 +182,42 @@ trackIntensities{3,selectTrack} = Intensity_OverTime_3;
 %% Display the Intensity PER Time point from the CENTRE of the track
 
 figure
+selectTrack =1;
 subplot(211)
 % intensity in the red channel
-mesh(Intensity_OverTime_2)
-view(80,60)
+mesh(squeeze(Intensity_OverTime_2(:,selectTrack,:)))
+view(20,60)
 axis tight; grid on
+axis ij
+
 subplot(212)
 % intensity in the green channel
-mesh(Intensity_OverTime_1)
-view(80,60)
+mesh(squeeze(Intensity_OverTime_1(:,selectTrack,:)))
+view(20,60)
 axis tight; grid on
+axis ij
 colormap jet
 
-ylabel('time')
-xlabel('distance from centroid')
+xlabel('time')
+ylabel('distance from centroid')
 zlabel('intensity')
 
 %% Display the Intensity PER time point around the ring
 figure
-
-mesh(Intensity_OverTime_3)
+selectTrack =4;
+mesh(squeeze(Intensity_OverTime_3(:,selectTrack,:)))
 
 grid on;axis tight
 colormap jet
-xlabel('angle')
-ylabel('time')
+ylabel('angle')
+xlabel('time')
 zlabel('intensity')
-set(gca,'xtick',1:3:21)
-set(gca,'xticklabel',-pi:0.9:pi)
+set(gca,'ytick',1:3:21)
+set(gca,'yticklabel',xticksL)
 filename = 'AvIntensities_angle_time3.png';
 axis tight
 
-%% Display the average values PER TIME
-
-figure
-
-plot(mean(Intensity_OverTime_3,2))
-
-grid on;axis tight
-colormap jet
-ylabel('intensity')
-xlabel('time')
-zlabel('intensity')
-filename = 'AvIntensities_angle_time4.png';
-axis tight
+axis ij
+view(20,40)
 
 
