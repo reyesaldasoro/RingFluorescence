@@ -170,7 +170,7 @@ for counterT = 1:1:numTimeFrames
         set(gca,'xtick',1:3:21)
         set(gca,'xticklabel',xticksL)
         % Grab a frame to save videos
-        F(counterT) = getframe();
+        F(counterT) = getframe(fig);
     end
 end
 
@@ -221,4 +221,10 @@ axis tight
 axis ij
 view(20,40)
 
+%% If frames were captured, save video
+
+ v = VideoWriter('video_tracks_1', 'MPEG-4');
+            open(v);
+            writeVideo(v,F);
+            close(v);
 
