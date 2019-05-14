@@ -54,7 +54,7 @@ clear avIntensity* Intensity_Over* IntensityPer*
 % Set the dimensions of the ring
 dimensionsRing                          = [9 24];
 % Set a maximum level for display purposes
-maxIntensityF                           = 9000;
+maxIntensityF                           = 15000;
 
 %lengthTrack{selectTrack}                = size(tracks{selectTrack},1);
 
@@ -62,10 +62,13 @@ avIntensity_1(30,numTracks)                         = 0;
 avIntensity_2(30,numTracks)                         = 0;
 Intensity_OverTime_1(30,numTracks,numTimeFrames )   = 0;
 Intensity_OverTime_2(30,numTracks,numTimeFrames )   = 0;
+Intensity_OverTime_3(21,numTracks,numTimeFrames)    = 0;
 currentRingIntensities(rows,cols,numTracks)         = 0;
+currentRingsC(61,61,1,numTracks)                    = 0;
+IntensityPerAngleT(21)                              = 0;
 %%
 % Loop over time
-for counterT = 590%1:5:numTimeFrames
+for counterT = 1:5:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
@@ -101,10 +104,10 @@ for counterT = 590%1:5:numTimeFrames
             currentRingsC(:,:,1,selectTrack)                  = currentRingIntensities(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30,selectTrack);
 
             for counterA=-pi:0.3:pi
-                intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+                intensityPerAngle = currentRingsC(:,:,1,selectTrack).*((angle_view>counterA).*(angle_view<(counterA+0.3)));
                 IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
             end
-    
+            Intensity_OverTime_3(:,selectTrack,counterT )   = IntensityPerAngleT;
             
         else
             distFromTrack(:,:,selectTrack)                  = 0;
@@ -114,13 +117,15 @@ for counterT = 590%1:5:numTimeFrames
             centroid_Col(selectTrack)                       = nan;
             currentRingIntensities(:,:,selectTrack)         = 0;
             currentRingsC(:,:,1,selectTrack)                = 0;
+            Intensity_OverTime_3(:,selectTrack,counterT )   = 0;
         end
     end
     
     %currentRingIntensities                           = currentRings.*repmat(channel_1,[1 1 numTracks]);
     
 
-    dataOut(:,:,2)      = channel_1/max(channel_1(:));
+    %dataOut(:,:,2)      = channel_1/max(channel_1(:));
+    dataOut(:,:,2)      = channel_1/maxIntensityF;
     dataOut(:,:,1)      = channel_2/max(channel_2(:));
     dataOut(:,:,3)      = 0.605*(max(currentRings,[],3));
     %dataOut(:,:,3)      = 0.605*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
@@ -136,7 +141,7 @@ for counterT = 590%1:5:numTimeFrames
 %         intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
 %         IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
 %     end
-    Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
+%    Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
     
     % Only display if necessary
     if displayTracking ==1
@@ -157,11 +162,12 @@ for counterT = 590%1:5:numTimeFrames
         colorbar
         subplot(224)
 %        plot(IntensityPerAngleT)
-        plot(Intensity_OverTime_1(:,:,counterT))
+        plot(Intensity_OverTime_3(:,:,counterT))
         axis([1 21 0 maxIntensityF ])
+        legend('1','2','3','4')
         grid on
         set(gca,'xtick',1:3:21)
-           set(gca,'xticklabel',xticksL)
+        set(gca,'xticklabel',xticksL)
  
     end
 end
