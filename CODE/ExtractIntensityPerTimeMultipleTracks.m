@@ -58,12 +58,14 @@ maxIntensityF                           = 9000;
 
 %lengthTrack{selectTrack}                = size(tracks{selectTrack},1);
 
-avIntensity_1(30,numTracks)                       = 0;
-avIntensity_2(30,numTracks)                       = 0;
-Intensity_OverTime_1(30,numTracks,numTimeFrames )  = 0;
-Intensity_OverTime_1(30,numTracks,numTimeFrames )  = 0;
+avIntensity_1(30,numTracks)                         = 0;
+avIntensity_2(30,numTracks)                         = 0;
+Intensity_OverTime_1(30,numTracks,numTimeFrames )   = 0;
+Intensity_OverTime_2(30,numTracks,numTimeFrames )   = 0;
+currentRingIntensities(rows,cols,numTracks)         = 0;
+%%
 % Loop over time
-for counterT = 240%1:5:numTimeFrames
+for counterT = 590%1:5:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
@@ -97,6 +99,12 @@ for counterT = 240%1:5:numTimeFrames
                                                                                 (distFromTrack(:,:,selectTrack)<dimensionsRing(2));
             currentRingIntensities(:,:,selectTrack)         = currentRings(:,:,selectTrack).*channel_1;
             currentRingsC(:,:,1,selectTrack)                  = currentRingIntensities(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30,selectTrack);
+
+            for counterA=-pi:0.3:pi
+                intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+                IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
+            end
+    
             
         else
             distFromTrack(:,:,selectTrack)                  = 0;
@@ -104,7 +112,8 @@ for counterT = 240%1:5:numTimeFrames
             Intensity_OverTime_2(:,selectTrack,counterT )   = 0;
             centroid_Row(selectTrack)                       = nan;
             centroid_Col(selectTrack)                       = nan;
-            currentRingsC(:,:,3,selectTrack)                  = 0;
+            currentRingIntensities(:,:,selectTrack)         = 0;
+            currentRingsC(:,:,1,selectTrack)                = 0;
         end
     end
     
@@ -120,13 +129,13 @@ for counterT = 240%1:5:numTimeFrames
     
     % find intensity of ring and per angle
     
-    intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
-    intensityRingC      = intensityRing(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30);
-    
-    for counterA=-pi:0.3:pi
-        intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
-        IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
-    end
+%     intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
+%     intensityRingC      = intensityRing(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30);
+%     
+%     for counterA=-pi:0.3:pi
+%         intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+%         IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
+%     end
     Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
     
     % Only display if necessary
