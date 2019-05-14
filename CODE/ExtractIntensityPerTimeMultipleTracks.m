@@ -36,11 +36,11 @@ angle_view          = angle(xx_t+1i*yy_t);
 
 %% prepare the figure to display
 % variable to select(1) or not to (0) the display
-displayTracking                         = 1;
+displayTracking                         = 0;
 if displayTracking==1
-    fig             = figure(1);
-    fig.Position    = [100 200 800 400];
-    fig.Colormap    = jet;
+    fig                                 = figure(1);
+    fig.Position                        = [100 200 800 400];
+    fig.Colormap                        = jet;
 end
 
 %% Prepare variables
@@ -170,7 +170,7 @@ for counterT = 1:1:numTimeFrames
         set(gca,'xtick',1:3:21)
         set(gca,'xticklabel',xticksL)
         % Grab a frame to save videos
-        F(counterT) = getframe(fig);
+       % F(counterT) = getframe(fig);
     end
 end
 
@@ -223,8 +223,8 @@ view(20,40)
 
 %% If frames were captured, save video
 
- v = VideoWriter('video_tracks_1', 'MPEG-4');
-            open(v);
-            writeVideo(v,F);
-            close(v);
+%  v = VideoWriter('video_tracks_1', 'MPEG-4');
+%             open(v);
+%             writeVideo(v,F);
+%             close(v);
 
