@@ -36,7 +36,7 @@ angle_view          = angle(xx_t+1i*yy_t);
 
 %% prepare the figure to display
 % variable to select(1) or not to (0) the display
-displayTracking                         = 0;
+displayTracking                         = 1;
 if displayTracking==1
     fig                                 = figure(1);
     fig.Position                        = [100 200 800 400];
@@ -69,7 +69,7 @@ IntensityPerAngleT(21)                              = 0;
 
 %%
 % Loop over time
-for counterT = 1:1:numTimeFrames
+for counterT = 375% 1:10:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
@@ -79,7 +79,8 @@ for counterT = 1:1:numTimeFrames
     %channel_2       = double(mean(dataIn(:,:,2:2:end),3));
     channel_1       = double(max(dataIn(:,:,1:2:end),[],3));
     channel_2       = double(max(dataIn(:,:,2:2:end),[],3));
-    
+    channel_1_3D       = double((dataIn(:,:,1:2:end)));
+    channel_2_3D       = double((dataIn(:,:,2:2:end)));
     % update the centroid
     currentRings                                        = zeros(rows,cols);
     for selectTrack = 1:numTracks
