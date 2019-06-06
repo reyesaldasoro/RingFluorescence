@@ -230,6 +230,8 @@ switch nargin
 
                     % look for an image description field as created by ImageJ
                     % these not always come in the same order!
+                    % Also consider when the user has included t,z,c as
+                    % part of the name
                     if isfield(dataIn_info,'ImageDescription')
                         % look for slices and frames in the description
                         q_spaces    = strfind(dataIn_info(1).ImageDescription,' ');
@@ -375,7 +377,8 @@ switch nargin
                     end
                     %%%%% TOOOO1C01Z001 to assign structure to the handles if it is
                     %CLare is TOOOO1Z01C001
-                    
+                    % Also consider when the user has included t,z,c as
+                    % part of the name                    
                     if ~(isempty(FindT)&&isempty(FindC)&&isempty(FindZ))
                         % if there are values for at least C and Z then read in cycles
                         LocationsForC           = (DifferentNameLocations>FindC);
