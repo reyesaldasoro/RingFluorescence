@@ -101,12 +101,28 @@ for counterT = 375% 1:10:numTimeFrames
             Intensity_OverTime_1(:,selectTrack,counterT )   = avIntensity_1(:,selectTrack);
             Intensity_OverTime_2(:,selectTrack,counterT )   = avIntensity_2(:,selectTrack);
             currentRings(:,:,selectTrack)                   =   (distFromTrack(:,:,selectTrack)>dimensionsRing(1)).*...
-                                                                                (distFromTrack(:,:,selectTrack)<dimensionsRing(2));
+                (distFromTrack(:,:,selectTrack)<dimensionsRing(2));
             currentRingIntensities(:,:,selectTrack)         = currentRings(:,:,selectTrack).*channel_1;
-            currentRingsC(:,:,1,selectTrack)                  = currentRingIntensities(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30,selectTrack);
+            
+            
+            % crop the region of the ring, be careful with the dimensions in
+            % case it is close to the edges of the field of view, i.e.
+            % centroids smaller than the size of the ring or larger than the
+            % edge - size.
+            rangeRowsRing       = max(1,centroid_Row(selectTrack)-30):min(rows,centroid_Row(selectTrack)+30);
+            rangeColsRing       = max(1,centroid_Col(selectTrack)-30):min(cols,centroid_Col(selectTrack)+30);
+            rangeRows           = (centroid_Row(selectTrack)-30):(centroid_Row(selectTrack)+30);
+            rangeCols           = (centroid_Col(selectTrack)-30):(centroid_Col(selectTrack)+30);
+            rangeRowsAngle      = rangeRowsRing-rangeRows(1)+1;
+            rangeColsAngle      = rangeColsRing-rangeCols(1)+1;
+            
+            %currentRingsC(:,:,1,selectTrack)                = currentRingIntensities(centroid_Row(selectTrack)-30:centroid_Row(selectTrack)+30,centroid_Col(selectTrack)-30:centroid_Col(selectTrack)+30,selectTrack);
+            currentRingsC(rangeRowsAngle,rangeColsAngle,1,selectTrack)                = currentRingIntensities(rangeRowsRing,rangeColsRing,selectTrack);
 
             for counterA=-pi:0.3:pi
+                %intensityPerAngle = currentRingsC(:,:,1,selectTrack).*((angle_view>counterA).*(angle_view<(counterA+0.3)));
                 intensityPerAngle = currentRingsC(:,:,1,selectTrack).*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+                
                 IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
             end
             Intensity_OverTime_3(:,selectTrack,counterT )   = IntensityPerAngleT;
