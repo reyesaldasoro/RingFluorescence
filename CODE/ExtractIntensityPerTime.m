@@ -1,3 +1,6 @@
+clear all;
+close all;
+
 %% analysePhagoCytosis
 if strcmp(filesep,'/')
     % Running in Mac
