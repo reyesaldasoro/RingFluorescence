@@ -61,7 +61,7 @@ for selectTrack = 4% 1:numTracks
     
     % Loop for the tracks
     
-    for counterT =  1:5:lengthTrack
+    for counterT =  1:1:lengthTrack
         disp([ selectTrack counterT])
         % Load the data
         load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
@@ -105,12 +105,19 @@ for selectTrack = 4% 1:numTracks
         % case it is close to the edges of the field of view, i.e.
         % centroids smaller than the size of the ring or larger than the
         % edge - size.
-        rangeRows           = centroid_Row-30:centroid_Row+30;
-        rangeCols           = centroid_Col-30:centroid_Col+30;
-        intensityRingC      = intensityRing(rangeRows,rangeCols);
+        rangeRowsRing       = max(1,centroid_Row-30):min(rows,centroid_Row+30);
+        rangeColsRing       = max(1,centroid_Col-30):min(cols,centroid_Col+30);
+        rangeRows           = (centroid_Row-30):(centroid_Row+30);
+        rangeCols           = (centroid_Col-30):(centroid_Col+30);
+        rangeRowsAngle      = rangeRowsRing-rangeRows(1)+1;
+        rangeColsAngle      = rangeColsRing-rangeCols(1)+1;
+        
+        intensityRingC      = intensityRing(rangeRowsRing,rangeColsRing);
+        angle_viewC         = angle_view(rangeRowsAngle,rangeColsAngle);
         
         for counterA=-pi:0.3:pi
-            intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+            %intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+            intensityPerAngle = intensityRingC.*((angle_viewC>counterA).*(angle_viewC<(counterA+0.3)));
             IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
         end
         Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
