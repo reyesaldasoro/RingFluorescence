@@ -100,9 +100,14 @@ for selectTrack = 4% 1:numTracks
         %imagesc([channel_1 channel_2])
         
         % find intensity of ring and per angle
-        
         intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
-        intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
+        % crop the region of the ring, be careful with the dimensions in
+        % case it is close to the edges of the field of view, i.e.
+        % centroids smaller than the size of the ring or larger than the
+        % edge - size.
+        rangeRows           = centroid_Row-30:centroid_Row+30;
+        rangeCols           = centroid_Col-30:centroid_Col+30;
+        intensityRingC      = intensityRing(rangeRows,rangeCols);
         
         for counterA=-pi:0.3:pi
             intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
