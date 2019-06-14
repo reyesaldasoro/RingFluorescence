@@ -100,10 +100,27 @@ for selectTrack = 1% 1:numTracks
         % find intensity of ring and per angle
         
         intensityRing       = channel_1.*(distFromTrack>dimensionsRing(1)).*(distFromTrack<dimensionsRing(2));
-        intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
+        % crop the region of the ring, be careful with the dimensions in
+        % case it is close to the edges of the field of view, i.e.
+        % centroids smaller than the size of the ring or larger than the
+        % edge - size.
+        rangeRowsRing       = max(1,centroid_Row-30):min(rows,centroid_Row+30);
+        rangeColsRing       = max(1,centroid_Col-30):min(cols,centroid_Col+30);
+        rangeRows           = (centroid_Row-30):(centroid_Row+30);
+        rangeCols           = (centroid_Col-30):(centroid_Col+30);
+        rangeRowsAngle      = rangeRowsRing-rangeRows(1)+1;
+        rangeColsAngle      = rangeColsRing-rangeCols(1)+1;
+        
+        intensityRingC      = intensityRing(rangeRowsRing,rangeColsRing);
+        angle_viewC         = angle_view(rangeRowsAngle,rangeColsAngle);
+
+        
+        
+        %intensityRingC      = intensityRing(centroid_Row-30:centroid_Row+30,centroid_Col-30:centroid_Col+30);
         
         for counterA=-pi:0.3:pi
-            intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+            %intensityPerAngle = intensityRingC.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
+            intensityPerAngle = intensityRingC.*((angle_viewC>counterA).*(angle_viewC<(counterA+0.3)));
             IntensityPerAngleT(round(1+10*(pi+(counterA))/3)) = max(intensityPerAngle(:));
         end
         Intensity_OverTime_3(counterT,: ) =IntensityPerAngleT;
