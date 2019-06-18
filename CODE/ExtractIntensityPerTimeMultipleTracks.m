@@ -188,7 +188,8 @@ for counterT = 175% 1:10:numTimeFrames
 %        plot(IntensityPerAngleT)
         plot(Intensity_OverTime_3(:,:,counterT))
         axis([1 21 0 maxIntensityF ])
-        legend('1','2','3','4')
+        %legend('1','2','3','4')
+        legend(textTracks)
         grid on
         set(gca,'xtick',1:3:21)
         set(gca,'xticklabel',xticksL)
