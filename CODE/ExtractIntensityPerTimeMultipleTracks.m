@@ -74,7 +74,7 @@ IntensityPerAngleT(21)                              = 0;
 
 %%
 % Loop over time
-for counterT =  1:1:numTimeFrames
+for counterT = 175% 1:10:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
