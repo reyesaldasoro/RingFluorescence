@@ -46,7 +46,12 @@ end
 %% Prepare variables
 centroid_Row(numTracks)             = 0 ;
 centroid_Col(numTracks)             = 0 ;
+for k=1:numTracks
+textTracks{k}                       = num2str(k);
+end
+
 distFromTrack(rows,cols,numTracks)  = 0;
+
 xticksL                             = {'-3.1','-2.2','-1.3','-0.4','0.4','1.4','2.3'};
 %% process the intensities of the rings
 clear Intensity_Over* F*
@@ -69,7 +74,7 @@ IntensityPerAngleT(21)                              = 0;
 
 %%
 % Loop over time
-for counterT = 375% 1:10:numTimeFrames
+for counterT = 175% 1:10:numTimeFrames
     disp([  counterT])
     % Load the data
     load(strcat(baseDir,dir1(counterT).name))
@@ -166,7 +171,8 @@ for counterT = 375% 1:10:numTimeFrames
         % Display
         subplot(121)
         imagesc(dataOut)
-        text(centroid_Col,centroid_Row,['1';'2';'3';'4'],'color','y')
+        %text(centroid_Col,centroid_Row,['1';'2';'3';'4'],'color','y')
+        text(centroid_Col,centroid_Row,textTracks,'color','y')
         title(num2str(counterT))
         drawnow
         pause(0.001)
