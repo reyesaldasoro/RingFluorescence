@@ -210,7 +210,12 @@ figure
 selectTrack =1;
 subplot(211)
 % intensity in the red channel
+try
 mesh(squeeze(Intensity_OverTime_2(:,selectTrack,:)))
+catch
+    size(Intensity_OverTime_2)
+    q=1;
+end
 view(20,60)
 axis tight; grid on
 axis ij
