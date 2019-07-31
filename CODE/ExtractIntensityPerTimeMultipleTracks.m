@@ -8,7 +8,7 @@ clc
 if strcmp(filesep,'/')
     % Running in Mac
     addpath('/Users/ccr22/Academic/GitHub/ThreeD_Fluorescence/CODE')
-    baseDir             = '/Users/ccr22/OneDrive - City, University of London/Acad/Research/Sheffield/SingleSlice_mat_Or/';
+    baseDir             = '/Users/ccr22/OneDrive - City, University of London/Acad/Research/Sheffield/SingleSliceA_mat_Or/';
     %baseDir             = '/Users/ccr22/Academic/work/neutrophils/sheffield/ClareMUIR/SingleSlice_mat_Or/';
     dir1                = dir (strcat(baseDir,'*.mat'));
 else
