@@ -1,5 +1,4 @@
 dir0=dir('*.tif');
-%%
 
 
 %%
@@ -21,13 +20,10 @@ for k=1:2:1999
             
     end
     mkdir(folderName)
+    % Move the files
     movefile(dir0(k).name, strcat(folderName,'/',dir0(k).name))
     movefile (dir0(k+1).name, strcat(folderName,'/',dir0(k+1).name))
-
-%disp(folderName)
-
-
-    
+    % Read them and save as a single stack
     
     
 end
