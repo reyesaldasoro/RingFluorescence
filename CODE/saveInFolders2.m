@@ -1,3 +1,4 @@
+clear
 dir0 = dir('T*');
 
 %%
