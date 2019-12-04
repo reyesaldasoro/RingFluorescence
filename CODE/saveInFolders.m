@@ -1,9 +1,12 @@
+clear
+
 dir0=dir('*.tif');
 
 
 %%
-for k=1:2:1999
+for k=2001:2:size(dir0,1)  %1999
     %k2 = dir0(k).name(13:15);
+    disp(k)
     if k<19
         
             folderName = strcat('T0000',num2str(1+floor(k/2)));
