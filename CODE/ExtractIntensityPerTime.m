@@ -11,8 +11,10 @@ if strcmp(filesep,'/')
     tracks              = readTracksXML('Cropped z7-14_Tracks.xml');
 else
     % running in windows
-    addpath('D:\Acad\GitHub\ThreeD_Fluorescence\CODE')
-    baseDir             = 'D:\OneDrive - City, University of London\Acad\Research\Sheffield\SingleSlice_mat_Or\';
+    %addpath('D:\Acad\GitHub\ThreeD_Fluorescence\CODE')
+    addpath('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\CODE')
+    %baseDir             = 'D:\OneDrive - City, University of London\Acad\Research\Sheffield\SingleSlice_mat_Or\';
+    baseDir             = 'C:\Users\sbbk034\OneDrive - City, University of London\Acad\Research\Sheffield\SingleSliceA_mat_Or\';
     dir1                = dir (strcat(baseDir,'*.mat'));
     tracks              = readTracksXML('Cropped z7-14_Tracks.xml');
 end
@@ -61,7 +63,7 @@ for selectTrack = 4% 1:numTracks
     
     % Loop for the tracks
     
-    for counterT =  1:1:lengthTrack
+    for counterT =  1:10:lengthTrack
         disp([ selectTrack counterT])
         % Load the data
         load(strcat(baseDir,dir1(tracks{selectTrack}(counterT,1)+1).name))
