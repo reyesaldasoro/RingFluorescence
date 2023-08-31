@@ -56,20 +56,25 @@ for k1=0:24:288
     lighting gouraud;
     axis ij
     view(-16,80);
-    camlight left
+
     grid on
     time    = 1+(k1/24);
     title(strcat('Time = ',num2str(time)))
 
-    h1.YLim = [0 130];
-    h1.XLim = [40 180];
+    %h1.YLim = [0 130];
+    %h1.XLim = [40 180];
 
     filename = strcat('DataSetOne_w_t_',num2str(time),'.png');
-    print('-dpng','-r100',filename)
+    %print('-dpng','-r100',filename)
 
 
     h1.XLim = [90 125];
     h1.YLim = [60 100];
+    %h1.YLim = [80 100];
+    %h1.XLim = [90 110];
+    %h1.ZLim = [4 11];
+    view(-16,40);
+        camlight left
     p1.FaceAlpha = 0.1;
     p2.FaceAlpha = 0.05;
     p4.FaceAlpha = 0.85;
@@ -77,5 +82,6 @@ for k1=0:24:288
     p2.EdgeAlpha = 0.8;
 
     filename = strcat('DataSetOne_z_t_',num2str(time),'.png');
-    print('-dpng','-r100',filename)
+    %print('-dpng','-r100',filename)
+    pause(0.5)
 end
