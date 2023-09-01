@@ -16,21 +16,24 @@ for k1=0:24:288
     d(:,:,2)=max(b2,[],3)/max(b2(:));
     d(1,1,3)=0;
 
-    figure(11)
-    imagesc(c)
-    figure(12)
-    imagesc(d)
+    % figure(11)
+    % imagesc(c)
+    % figure(12)
+    % imagesc(d)
 
 
 
     figure(15)
 
     clf
+
+    gThres =1064;
+    rThres = 530;
     h1 = gca;
     s1 = isosurface(b2,750);
-    s2 = isosurface(b2,1200);
+    s2 = isosurface(b2,gThres);
     s3 = isosurface(a2,1100);
-    s4 = isosurface(a3,550);
+    s4 = isosurface(a3,rThres);
 
     p1 = patch(s1);
     p2 = patch(s2);
@@ -68,8 +71,8 @@ for k1=0:24:288
     %print('-dpng','-r100',filename)
 
 
-    h1.XLim = [90 125];
-    h1.YLim = [60 100];
+    h1.XLim = [93 120];
+    h1.YLim = [77 98];
     %h1.YLim = [80 100];
     %h1.XLim = [90 110];
     %h1.ZLim = [4 11];
@@ -77,11 +80,11 @@ for k1=0:24:288
         camlight left
     p1.FaceAlpha = 0.1;
     p2.FaceAlpha = 0.05;
-    p4.FaceAlpha = 0.85;
+    p4.FaceAlpha = 0.5805614370603;
     p2.EdgeColor = [0 0.5 0];
     p2.EdgeAlpha = 0.8;
 
-    filename = strcat('DataSetOne_z_t_',num2str(time),'.png');
-    %print('-dpng','-r100',filename)
+    filename = strcat('DataSetOne_z_t=',num2str(time),'_r=',num2str(rThres),'_g=',num2str(gThres),'.png');
+    print('-dpng','-r100',filename)
     pause(0.5)
 end
