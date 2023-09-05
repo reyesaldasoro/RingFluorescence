@@ -1,4 +1,4 @@
-for k1=168%:24:288
+for k1=0:24:288
     for k2=1:12
         a(:,:,k2)   = double(imread('dataset_One.tif',k1+2*k2-1));
         b(:,:,k2)   = double(imread('dataset_One.tif',k1+2*k2));
@@ -10,7 +10,7 @@ for k1=168%:24:288
     c(:,:,2)        = max(b2,[],3)/max(b2(:));
     c(1,1,3)        = 0;
 
- rThres = 530;
+     rThres = 602;
     a3=(b2>rThres).*a2;
     d(:,:,1)=0.4*max(a3,[],3)/max(a3(:));
     d(:,:,2)=max(b2,[],3)/max(b2(:));
@@ -27,7 +27,7 @@ for k1=168%:24:288
 
     clf
 
-    gThres =1062;
+    gThres =1038;
    
     h1 = gca;
     % s1 is the green neutrophil
@@ -91,7 +91,7 @@ for k1=168%:24:288
     p2.EdgeAlpha = 0.8;
 
     filename = strcat('DataSetOne_z_t=',num2str(time),'_r=',num2str(rThres),'_g=',num2str(gThres),'.png');
-    %print('-dpng','-r100',filename)
+    print('-dpng','-r100',filename)
     pause(0.5)
     %axis tight
 end
