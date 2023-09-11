@@ -1,3 +1,8 @@
+
+% Loop that controls the timepoints, for each timepoint there are 24 slices
+% to read, 12 of one channel and 12 of other channel thus the loop every
+% 24. For only one time point, it is possible to comment with a % just
+% before the first colon and change the k1 by 24
 for k1=0:24:288
     for k2=1:12
         a(:,:,k2)   = double(imread('dataset_One.tif',k1+2*k2-1));
@@ -46,9 +51,20 @@ for k1=0:24:288
     p4 = patch(s4);
 
     view(3);
-    p1.FaceColor = [0.5 1 0.5];
-    p1.EdgeColor = 'none';
-    p1.FaceAlpha = 0.1;
+
+    % Colour of the faces and vertices of the neutrophil
+    % First option, very light green surface to leave the insides
+    % unobstructed
+        % p1.FaceColor = [0.5 1 0.5]; % light green
+        % p1.EdgeColor = 'none';
+        % p1.FaceAlpha = 0.1;
+    %secind option, neutrophil in blue
+        p1.FaceColor = [0   0 1  ]; % blue
+        p1.EdgeColor = [0   0 1  ]; % blue
+        p1.FaceAlpha = 0.1;
+        p1.EdgeAlpha = 0.4;
+    
+    
     p2.FaceColor = [0 0.6 0];
     p2.EdgeColor = 'none';
     p2.FaceAlpha = 0.5;
@@ -90,8 +106,12 @@ for k1=0:24:288
     p2.EdgeColor = [0 0.5 0];
     p2.EdgeAlpha = 0.8;
 
-    filename = strcat('DataSetOne_z_t=',num2str(time),'_r=',num2str(rThres),'_g=',num2str(gThres),'.png');
+    % these lines save as a png and a matlab fig
+    filename    = strcat('DataSetOne_z_t=',num2str(time),'_r=',num2str(rThres),'_g=',num2str(gThres),'.png');
+    filename2   = strcat('DataSetOne_z_t=',num2str(time),'_r=',num2str(rThres),'_g=',num2str(gThres),'.fig');
     print('-dpng','-r100',filename)
+    savefig(gcf,filename2)
+
     pause(0.5)
     %axis tight
 end
