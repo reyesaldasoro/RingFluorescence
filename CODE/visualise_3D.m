@@ -46,7 +46,7 @@ for k1=0:24:288
         distFromPointG(countG) = (sum(greenPhagosome_P(countG).Centroid-[100 90 9]).^2);
     end
     [minDistG,correctPhagosome] = min(distFromPointG);
-    disp(minDistG)
+    %disp(minDistG)
     for countR=1:numRB
         distFromPointR(countR) = (sum(redBacteria_P(countR).Centroid-[100 90 9]).^2);
     end
