@@ -1,6 +1,6 @@
 
-%dataInName                      = 'dataset_One.tif';
-dataInName                      = 'dataset_Two.tif';
+dataInName                      = 'dataset_One.tif';
+%dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
@@ -44,15 +44,18 @@ for k1=+0:24:(sizeDataIn-12*2)
     % imagesc(d)
 
 
-    % % Values for Dataset One
-    % lowGreenThres                   = 802;
-    % redThres                        = 574;
-    % highGreenThres                  = 1062;
+    if  strcmp(dataInName,'dataset_One.tif')
+        % Values for Dataset One
+        lowGreenThres                   = 802;
+        redThres                        = 574;
+        highGreenThres                  = 1062;
+    else
+        % Values for Dataset Two
+        lowGreenThres                   = 478;
+        redThres                        = 550;
+        highGreenThres                  = 650;
+    end
 
-    % Values for Dataset Two
-    lowGreenThres                   = 478;
-    redThres                        = 550;
-    highGreenThres                  = 650;
 
 
     redInsideGreen                  = (greenChannelSmooth>lowGreenThres).*redChannelSmooth;
@@ -151,43 +154,57 @@ for k1=+0:24:(sizeDataIn-12*2)
 
     grid on
     time    = 1+(k1/24);
-    title(strcat('Time = ',num2str(time),', R vol =',num2str(volR),', G Vol =',num2str(volG)))
+%    title(strcat('Time = ',num2str(time),', R vol =',num2str(volR),', G Vol =',num2str(volG)))
+    title(strcat('Time = ',num2str(time)))
 
     %h1.YLim = [0 130];
     %h1.XLim = [40 180];
 
-    filename = strcat('DataSetOne_w_t_',num2str(time),'.png');
+    %filename = strcat('DataSetOne_w_t_',num2str(time),'.png');
     %print('-dpng','-r100',filename)
 
     % Zoom to a region of interest
     % % Values for Dataset One
 
-    h1.XLim = [93 120];
-    h1.YLim = [77 103];
-    h1.ZLim = [1 12];
     %h1.YLim = [80 100];
     %h1.XLim = [90 110];
     %h1.ZLim = [4 11];
-    view(-21,12);
-
-    % % Values for Dataset One
-
-    h1.XLim = [30 140];
-    h1.YLim = [70 105];
-    h1.ZLim = [6 12];
-    view(-18,60);
-
-        camlight left
 
 
-    % these lines save as a png and a matlab fig
-    %filename    = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
-    %filename2   = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
-    filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
-    filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
+    if  strcmp(dataInName,'dataset_One.tif')
+        h1.XLim = [93 120];
+        h1.YLim = [77 103];
+        h1.ZLim = [1 12];
+            view(-75,4);
+    else
+        % % Values for Dataset One
+        h1.XLim = [30 140];
+        h1.YLim = [70 105];
+        h1.ZLim = [6 12];
+        view(-18,60);
+    end
+
+
+    camlight left
+
+    if  strcmp(dataInName,'dataset_One.tif')
+
+        % these lines save as a png and a matlab fig
+
+%        filename    = strcat('DataSetOne_2023_09_20_t=',num2str(time),'.png');
+%        filename2   = strcat('DataSetOne_2023_09_20_t=',num2str(time),'.fig');
+        filename    = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
+        filename2   = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
+    else
+%        filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'png');
+%        filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'.fig');
+        filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
+        filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
+    end
+
     print('-dpng','-r100',filename)
     savefig(gcf,filename2)
 
-    %pause(0.5)
+    pause(0.5)
     %axis tight
 end
