@@ -1,6 +1,6 @@
 
-dataInName                      = 'dataset_One.tif';
-%dataInName                      = 'dataset_Two.tif';
+%dataInName                      = 'dataset_One.tif';
+dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
