@@ -1,6 +1,6 @@
 
-dataInName                      = 'dataset_One.tif';
-%dataInName                      = 'dataset_Two.tif';
+%dataInName                      = 'dataset_One.tif';
+dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
@@ -15,7 +15,14 @@ numTimePoints                   = sizeDataIn /2/12;
 % 24. For only one time point, it is possible to comment with a % just
 % before the first colon and change the k1 by 24
 
-for k1=0 :24:(sizeDataIn-12*2)
+if  strcmp(dataInName,'dataset_One.tif')
+    positionBacteria = repmat([100 90 9],numTimePoints,1);
+else
+    positionBacteria = repmat([43 99 9],numTimePoints,1);
+end
+
+
+for k1=0:24:(sizeDataIn-12*2)
     for k2=1:12
         % for dataset one
         redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2-1));
@@ -24,7 +31,7 @@ for k1=0 :24:(sizeDataIn-12*2)
         %redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2));
         %greenChannel(:,:,k2)    = double(imread(dataInName,k1+2*k2-1));
     end
-
+    time                        = 1+(k1/24);
     redChannelSmooth            = smooth3(redChannel);
     greenChannelSmooth          = smooth3(greenChannel);
     
@@ -73,17 +80,20 @@ for k1=0 :24:(sizeDataIn-12*2)
     [redBacteria_L,numRB]           = bwlabeln(redBacteria);
     redBacteria_P                   = regionprops(redBacteria_L,'Area','Centroid');
   
-    volG =0; volR = 0;
-    % bacteria and phagosome of interest are centred around 100,90 find
-    % dimensions 
+    % volG =0; volR = 0;
+    % % DATA SET ONE fairly fixed
+    % % bacteria and phagosome of interest are centred around 100,90 
+    % % DATA SET TWO moves
+    
+    % find dimensions 
     clear distFromPointG distFromPointR
-    for countG=1:numGP
-        distFromPointG(countG)      = (sum( (greenPhagosome_P(countG).Centroid-[100 90 9]).^2));
-    end
-    [minDistG,correctPhagosome]     = min(distFromPointG);
+%    for countG=1:numGP
+%        distFromPointG(countG)      = (sum( (greenPhagosome_P(countG).Centroid-positionBacteria(time,:)).^2));
+%    end
+%    [minDistG,correctPhagosome]     = min(distFromPointG);
     %disp(minDistG)
     for countR=1:numRB
-        distFromPointR(countR)      = (sum((redBacteria_P(countR).Centroid-[100 90 9]).^2));
+        distFromPointR(countR)      = (sum((redBacteria_P(countR).Centroid-positionBacteria(time,:)).^2));
     end
     [minDistR,correctBact]          = min(distFromPointR);
     %disp(minDist)
@@ -151,7 +161,8 @@ for k1=0 :24:(sizeDataIn-12*2)
 
     % Red outside neutrophil, not of interest at the moment
     p3.FaceColor = [1 0 0];
-    p3.EdgeColor = 'y';
+    %p3.EdgeColor = 'y';
+    p3.EdgeColor=[1 0.8 0];
     p3.EdgeAlpha = 0.5;
     p3.FaceAlpha = 0.15;
 
@@ -167,7 +178,7 @@ for k1=0 :24:(sizeDataIn-12*2)
     view(-16,80);
 
     grid on
-    time    = 1+(k1/24);
+
 %    title(strcat('Time = ',num2str(time),', R vol =',num2str(volR),', G Vol =',num2str(volG)))
     title(strcat('Time = ',num2str(time),', Bacteria Inside Neutrophil  =',num2str(100*volR_inside/volR,3),'%'))
 %    title(strcat('Time = ',num2str(time)))
@@ -213,8 +224,8 @@ for k1=0 :24:(sizeDataIn-12*2)
     else
 %        filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'png');
 %        filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'.fig');
-        filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
-        filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
+        filename    = strcat('DataSetTwo_2023_09_22_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
+        filename2   = strcat('DataSetTwo_2023_09_22_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
     end
 
     print('-dpng','-r100',filename)
@@ -224,6 +235,6 @@ for k1=0 :24:(sizeDataIn-12*2)
     %view(2)
 
 
-    pause(0.5)
+    %pause(0.5)
 
 end
