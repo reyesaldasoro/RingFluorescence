@@ -1,6 +1,6 @@
 
-%dataInName                      = 'dataset_One.tif';
-dataInName                      = 'dataset_Two.tif';
+dataInName                      = 'dataset_One.tif';
+%dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
@@ -15,7 +15,7 @@ numTimePoints                   = sizeDataIn /2/12;
 % 24. For only one time point, it is possible to comment with a % just
 % before the first colon and change the k1 by 24
 
-for k1=+0:24:(sizeDataIn-12*2)
+for k1=0 :24:(sizeDataIn-12*2)
     for k2=1:12
         % for dataset one
         redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2-1));
@@ -49,19 +49,24 @@ for k1=+0:24:(sizeDataIn-12*2)
         lowGreenThres                   = 802;
         redThres                        = 574;
         highGreenThres                  = 1062;
+        highRedThres                    = 1100;
     else
         % Values for Dataset Two
         lowGreenThres                   = 478;
         redThres                        = 550;
         highGreenThres                  = 650;
+        highRedThres                    = 1100;
     end
 
 
 
     redInsideGreen                  = (greenChannelSmooth>lowGreenThres).*redChannelSmooth;
     greenPhagosome                  = greenChannelSmooth>highGreenThres;
+    greenNeutrophil                 = greenChannelSmooth>lowGreenThres;
     %redBacteria                     = redInsideGreen>redThres;
     redBacteria                     = redChannelSmooth>redThres;
+    redOutsideGreen                 = (greenChannelSmooth<lowGreenThres).*(redChannelSmooth>redThres);
+
 
     [greenPhagosome_L,numGP]        = bwlabeln(greenPhagosome);
     greenPhagosome_P                = regionprops(greenPhagosome_L,'Area','Centroid');
@@ -69,25 +74,33 @@ for k1=+0:24:(sizeDataIn-12*2)
     redBacteria_P                   = regionprops(redBacteria_L,'Area','Centroid');
   
     volG =0; volR = 0;
-    % % bacteria and phagosome of interest are centred around 100,90 find
-    % % dimensions 
-    % for countG=1:numGP
-    %     distFromPointG(countG)      = (sum(greenPhagosome_P(countG).Centroid-[100 90 9]).^2);
-    % end
-    % [minDistG,correctPhagosome]     = min(distFromPointG);
-    % %disp(minDistG)
-    % for countR=1:numRB
-    %     distFromPointR(countR)      = (sum(redBacteria_P(countR).Centroid-[100 90 9]).^2);
-    % end
-    % [minDistR,correctBact]          = min(distFromPointR);
-    % %disp(minDist)
-    % 
-    % volR                            = redBacteria_P(correctBact).Area;
-    % if minDistG<10
-    %     volG                        = greenPhagosome_P(correctPhagosome).Area;
-    % else
-    %     volG                        = 0;
-    % end
+    % bacteria and phagosome of interest are centred around 100,90 find
+    % dimensions 
+    clear distFromPointG distFromPointR
+    for countG=1:numGP
+        distFromPointG(countG)      = (sum( (greenPhagosome_P(countG).Centroid-[100 90 9]).^2));
+    end
+    [minDistG,correctPhagosome]     = min(distFromPointG);
+    %disp(minDistG)
+    for countR=1:numRB
+        distFromPointR(countR)      = (sum((redBacteria_P(countR).Centroid-[100 90 9]).^2));
+    end
+    [minDistR,correctBact]          = min(distFromPointR);
+    %disp(minDist)
+
+    volR                            = redBacteria_P(correctBact).Area;
+
+    % find ratio of the bacteria that is inside the neutrophil
+    volR_inside                     = sum(sum(sum(((greenNeutrophil).*(redBacteria_L==correctBact)))));
+    volR_outside                    = sum(sum(sum(((1-greenNeutrophil).*(redBacteria_L==correctBact)))));
+
+
+
+    if minDistG<10
+        volG                        = greenPhagosome_P(correctPhagosome).Area;
+    else
+        volG                        = 0;
+    end
 
 
   
@@ -100,12 +113,12 @@ for k1=+0:24:(sizeDataIn-12*2)
 
     h1 = gca;
     % s1 is the green neutrophil thus a low threshold to capture all
-    s1 = isosurface(greenChannelSmooth,lowGreenThres);
+    s1 = isosurface(greenNeutrophil);
     % s2 is the green phagosomes
     s2 = isosurface(greenPhagosome,0.5);
     % s3 is red outside the neutrophil a high threshold as it is a large
     % region, the bacteria are much dimmer
-    s3 = isosurface(redChannelSmooth,1100);
+    s3 = isosurface(redOutsideGreen,0.5);
     % s4 is red inside the neutrophil, there are some problems with the
     % boundaries close to s3
     s4 = isosurface(redBacteria,0.5);
@@ -138,7 +151,8 @@ for k1=+0:24:(sizeDataIn-12*2)
 
     % Red outside neutrophil, not of interest at the moment
     p3.FaceColor = [1 0 0];
-    p3.EdgeColor = 'none';
+    p3.EdgeColor = 'y';
+    p3.EdgeAlpha = 0.5;
     p3.FaceAlpha = 0.15;
 
     % Red bacteria 
@@ -155,7 +169,8 @@ for k1=+0:24:(sizeDataIn-12*2)
     grid on
     time    = 1+(k1/24);
 %    title(strcat('Time = ',num2str(time),', R vol =',num2str(volR),', G Vol =',num2str(volG)))
-    title(strcat('Time = ',num2str(time)))
+    title(strcat('Time = ',num2str(time),', Bacteria Inside Neutrophil  =',num2str(100*volR_inside/volR,3),'%'))
+%    title(strcat('Time = ',num2str(time)))
 
     %h1.YLim = [0 130];
     %h1.XLim = [40 180];
@@ -193,8 +208,8 @@ for k1=+0:24:(sizeDataIn-12*2)
 
 %        filename    = strcat('DataSetOne_2023_09_20_t=',num2str(time),'.png');
 %        filename2   = strcat('DataSetOne_2023_09_20_t=',num2str(time),'.fig');
-        filename    = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
-        filename2   = strcat('DataSetOne_2023_09_20_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
+        filename    = strcat('DataSetOne_2023_09_22_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.png');
+        filename2   = strcat('DataSetOne_2023_09_22_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
     else
 %        filename    = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'png');
 %        filename2   = strcat('DataSetTwo_2023_09_20_t=',num2str(time),'.fig');
@@ -205,6 +220,10 @@ for k1=+0:24:(sizeDataIn-12*2)
     print('-dpng','-r100',filename)
     savefig(gcf,filename2)
 
-    pause(0.5)
     %axis tight
+    %view(2)
+
+
+    pause(0.5)
+
 end
