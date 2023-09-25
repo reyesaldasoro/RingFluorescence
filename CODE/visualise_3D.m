@@ -1,6 +1,6 @@
 
-%dataInName                      = 'dataset_One.tif';
-dataInName                      = 'dataset_Two.tif';
+dataInName                      = 'dataset_One.tif';
+%dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
@@ -21,6 +21,9 @@ else
     positionBacteria = repmat([43 99 9],numTimePoints,1);
 end
 
+
+clear F;
+clf
 
 for k1=0:24:(sizeDataIn-12*2)
     for k2=1:12
@@ -106,11 +109,11 @@ for k1=0:24:(sizeDataIn-12*2)
 
 
 
-    if minDistG<10
-        volG                        = greenPhagosome_P(correctPhagosome).Area;
-    else
-        volG                        = 0;
-    end
+    % if minDistG<10
+    %     volG                        = greenPhagosome_P(correctPhagosome).Area;
+    % else
+    %     volG                        = 0;
+    % end
 
 
   
@@ -203,7 +206,7 @@ for k1=0:24:(sizeDataIn-12*2)
         h1.ZLim = [1 12];
             view(-75,4);
     else
-        % % Values for Dataset One
+        % % Values for Dataset Two
         h1.XLim = [30 140];
         h1.YLim = [70 105];
         h1.ZLim = [6 12];
@@ -228,13 +231,50 @@ for k1=0:24:(sizeDataIn-12*2)
         filename2   = strcat('DataSetTwo_2023_09_22_t=',num2str(time),'_r=',num2str(lowGreenThres),'_g=',num2str(highGreenThres),'.fig');
     end
 
-    print('-dpng','-r100',filename)
-    savefig(gcf,filename2)
+    % print current frame as a PNG or as a matlab FIG
+%    print('-dpng','-r100',filename)
+%    savefig(gcf,filename2)
 
-    %axis tight
+% For the zoom out
+        axis tight
+    h1.XLim = [1 193];
+    h1.YLim = [1 166];
+    view(-26,80)
+%    h1.ZLim = [7 12];
+    % grab frames to produce a movie
+    F(time) = getframe(gcf);
     %view(2)
 
 
     %pause(0.5)
 
 end
+
+%%
+
+if  strcmp(dataInName,'dataset_One.tif')
+    videoName1 = 'Dataset_One_Bacteria.mp4';
+    videoName2 = 'Dataset_One_Bacteria.gif';
+else
+    videoName1 = 'Dataset_Two_Bacteria.mp4';
+    videoName2 = 'Dataset_Two_Bacteria.gif';
+end
+
+
+v = VideoWriter(videoName1, 'MPEG-4');
+            open(v);
+            writeVideo(v,F);
+            close(v);
+
+
+[imGif,mapGif] = rgb2ind(F(1).cdata,256,'nodither');
+    numFrames = size(F,2);
+
+    imGif(1,1,1,numFrames) = 0;
+    for k = 2:numFrames 
+      imGif(:,:,1,k) = rgb2ind(F(k).cdata,mapGif,'nodither');
+    end
+
+    imwrite(imGif,mapGif,videoName2,...
+            'DelayTime',0,'LoopCount',inf)
+
