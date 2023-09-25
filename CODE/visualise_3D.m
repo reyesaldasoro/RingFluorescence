@@ -25,7 +25,7 @@ end
 clear F;
 clf
 
-for k1=0:24:(sizeDataIn-12*2)
+for k1=168 % :24:(sizeDataIn-12*2)
     for k2=1:12
         % for dataset one
         redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2-1));
@@ -119,22 +119,22 @@ for k1=0:24:(sizeDataIn-12*2)
   
 
     % DISPLAY
-    figure(14)
+    figure(15)
 
-    clf
+    %clf
 
 
     h1 = gca;
     % s1 is the green neutrophil thus a low threshold to capture all
     s1 = isosurface(greenNeutrophil);
     % s2 is the green phagosomes
-    s2 = isosurface(greenPhagosome,0.5);
+    s2 = isosurface(greenPhagosome,0.05);
     % s3 is red outside the neutrophil a high threshold as it is a large
     % region, the bacteria are much dimmer
-    s3 = isosurface(redOutsideGreen,0.5);
+    s3 = isosurface(redOutsideGreen,0.05);
     % s4 is red inside the neutrophil, there are some problems with the
     % boundaries close to s3
-    s4 = isosurface(redBacteria,0.5);
+    s4 = isosurface(redBacteria,0.05);
 
     p1 = patch(s1);
     p2 = patch(s2);
@@ -236,10 +236,10 @@ for k1=0:24:(sizeDataIn-12*2)
 %    savefig(gcf,filename2)
 
 % For the zoom out
-        axis tight
-    h1.XLim = [1 193];
-    h1.YLim = [1 166];
-    view(-26,80)
+    %     axis tight
+    % h1.XLim = [1 193];
+    % h1.YLim = [1 166];
+    % view(-26,80)
 %    h1.ZLim = [7 12];
     % grab frames to produce a movie
     F(time) = getframe(gcf);
