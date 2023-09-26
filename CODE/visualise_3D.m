@@ -25,7 +25,7 @@ end
 clear F;
 clf
 
-for k1=168 % :24:(sizeDataIn-12*2)
+for k1=0:24:(sizeDataIn-12*2)
     for k2=1:12
         % for dataset one
         redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2-1));
