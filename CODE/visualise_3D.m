@@ -1,6 +1,6 @@
 
-dataInName                      = 'dataset_One.tif';
-%dataInName                      = 'dataset_Two.tif';
+%dataInName                      = 'dataset_One.tif';
+dataInName                      = 'dataset_Two.tif';
 
 
 sizeDataIn                      = size(imfinfo(dataInName),1);
@@ -19,13 +19,18 @@ if  strcmp(dataInName,'dataset_One.tif')
     positionBacteria = repmat([100 90 9],numTimePoints,1);
 else
     positionBacteria = repmat([43 99 9],numTimePoints,1);
+    positionBacteria(43,:) =[120 80 9]; 
+    positionBacteria(44,:) =[120 80 9]; 
+    positionBacteria(45,:) =[120 80 9]; 
+    positionNeutrophil     =[120 80 9]; 
+
 end
 
 
 clear F;
 clf
 
-for k1=0:24:(sizeDataIn-12*2)
+for k1= 0:24:(sizeDataIn-12*2)
     for k2=1:12
         % for dataset one
         redChannel(:,:,k2)      = double(imread(dataInName,k1+2*k2-1));
@@ -73,6 +78,8 @@ for k1=0:24:(sizeDataIn-12*2)
     redInsideGreen                  = (greenChannelSmooth>lowGreenThres).*redChannelSmooth;
     greenPhagosome                  = greenChannelSmooth>highGreenThres;
     greenNeutrophil                 = greenChannelSmooth>lowGreenThres;
+    [greenNeutrophil_L,numGN]       = bwlabeln(greenNeutrophil);
+    greenNeutrophil_P               = regionprops(greenNeutrophil_L,greenChannelSmooth,'Area','Centroid','MeanIntensity');
     %redBacteria                     = redInsideGreen>redThres;
     redBacteria                     = redChannelSmooth>redThres;
     redOutsideGreen                 = (greenChannelSmooth<lowGreenThres).*(redChannelSmooth>redThres);
@@ -98,8 +105,12 @@ for k1=0:24:(sizeDataIn-12*2)
     for countR=1:numRB
         distFromPointR(countR)      = (sum((redBacteria_P(countR).Centroid-positionBacteria(time,:)).^2));
     end
+    for countG=1:numGN
+        distFromPointG(countG)      = (sum((greenNeutrophil_P(countG).Centroid-positionNeutrophil).^2));
+    end
     [minDistR,correctBact]          = min(distFromPointR);
-    %disp(minDist)
+    [minDistG,correctNeut]          = min(distFromPointG);
+   %disp(minDist)
 
     volR                            = redBacteria_P(correctBact).Area;
 
@@ -107,8 +118,9 @@ for k1=0:24:(sizeDataIn-12*2)
     volR_inside                     = sum(sum(sum(((greenNeutrophil).*(redBacteria_L==correctBact)))));
     volR_outside                    = sum(sum(sum(((1-greenNeutrophil).*(redBacteria_L==correctBact)))));
 
-    % save the average intensity of the bacterial
+    % save the average intensity of the bacteria and neutrophil
     av_intensity_bacteria(time,1)     = redBacteria_P(correctBact).MeanIntensity;
+    av_intensity_neutrophil(time,1)   = greenNeutrophil_P(correctBact).MeanIntensity;
 
     % if minDistG<10
     %     volG                        = greenPhagosome_P(correctPhagosome).Area;
@@ -250,12 +262,23 @@ for k1=0:24:(sizeDataIn-12*2)
     %pause(0.5)
 
 end
-
+%%
 figure(16)
-plot(av_intensity_bacteria,'b-o','linewidth',2)
+colororder({'r','g'})
+yyaxis left
+plot(av_intensity_bacteria,'-o','linewidth',2)
+yyaxis right
+plot(av_intensity_neutrophil,'color',[0 0.6 0],'linewidth',1,'Marker','*')
+
 openvar("av_intensity_bacteria")
 grid on
 axis tight
+figure(17)
+plot(1:time,av_intensity_bacteria,'-ro',1:time,av_intensity_neutrophil,'g-*','linewidth',2)
+grid on
+axis tight
+
+
 %%
 
 if  strcmp(dataInName,'dataset_One.tif')
