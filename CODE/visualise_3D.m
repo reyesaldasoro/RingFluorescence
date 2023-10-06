@@ -81,7 +81,7 @@ for k1=0:24:(sizeDataIn-12*2)
     [greenPhagosome_L,numGP]        = bwlabeln(greenPhagosome);
     greenPhagosome_P                = regionprops(greenPhagosome_L,'Area','Centroid');
     [redBacteria_L,numRB]           = bwlabeln(redBacteria);
-    redBacteria_P                   = regionprops(redBacteria_L,'Area','Centroid');
+    redBacteria_P                   = regionprops(redBacteria_L,redChannelSmooth,'Area','Centroid','MeanIntensity');
   
     % volG =0; volR = 0;
     % % DATA SET ONE fairly fixed
@@ -107,7 +107,8 @@ for k1=0:24:(sizeDataIn-12*2)
     volR_inside                     = sum(sum(sum(((greenNeutrophil).*(redBacteria_L==correctBact)))));
     volR_outside                    = sum(sum(sum(((1-greenNeutrophil).*(redBacteria_L==correctBact)))));
 
-
+    % save the average intensity of the bacterial
+    av_intensity_bacteria(time,1)     = redBacteria_P(correctBact).MeanIntensity;
 
     % if minDistG<10
     %     volG                        = greenPhagosome_P(correctPhagosome).Area;
@@ -250,6 +251,11 @@ for k1=0:24:(sizeDataIn-12*2)
 
 end
 
+figure(16)
+plot(av_intensity_bacteria,'b-o','linewidth',2)
+openvar("av_intensity_bacteria")
+grid on
+axis tight
 %%
 
 if  strcmp(dataInName,'dataset_One.tif')
