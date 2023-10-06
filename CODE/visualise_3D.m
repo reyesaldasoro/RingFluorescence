@@ -121,7 +121,7 @@ for k1=0:24:(sizeDataIn-12*2)
     % DISPLAY
     figure(15)
 
-    %clf
+    clf
 
 
     h1 = gca;
@@ -262,6 +262,9 @@ end
 
 
 v = VideoWriter(videoName1, 'MPEG-4');
+% Change the frame rate, default is 30
+v.FrameRate = 4;
+
             open(v);
             writeVideo(v,F);
             close(v);
@@ -274,7 +277,9 @@ v = VideoWriter(videoName1, 'MPEG-4');
     for k = 2:numFrames 
       imGif(:,:,1,k) = rgb2ind(F(k).cdata,mapGif,'nodither');
     end
-
+% Delay time for gif in seconds to the next frame
+%delay_time = 0;
+delay_time = 1;
     imwrite(imGif,mapGif,videoName2,...
-            'DelayTime',0,'LoopCount',inf)
+            'DelayTime',delay_time,'LoopCount',inf)
 
