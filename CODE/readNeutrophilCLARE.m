@@ -106,7 +106,7 @@ switch nargin
                     end
                     
                     dataInName = strcat(pathname(1:end-1),dataInName);
-                    [dataIn,handles] = readNeutrophils(dataInName);
+                    [dataIn,handles] = readNeutrophilCLARE(dataInName);
                 else
                     % no data to read, exit
                     %disp('Folder not found');
@@ -240,14 +240,19 @@ switch nargin
                         end
                         q1i         = strfind(dataIn_info(1).ImageDescription,'slices=');
                         %q1f         = strfind(dataIn_info(1).ImageDescription(q1i:end),' ');
-                        q1f         = q_spaces(find(q_spaces>q1i,1));
+                        if isempty(q1i)
+                            handles.levs        =1;
+                        else
+                            q1f         = q_spaces(find(q_spaces>q1i,1));
+                            handles.levs        = str2num(dataIn_info(1).ImageDescription(q1i+7:q1f));
+                        end
                         q2i         = strfind(dataIn_info(1).ImageDescription,'frames=');
                         %q2f         = strfind(dataIn_info(1).ImageDescription(q2i:end),' ');
                         q2f         = q_spaces(find(q_spaces>q2i,1));
                         q3i         = strfind(dataIn_info(1).ImageDescription,'channels=');
                         %q3f         = strfind(dataIn_info(1).ImageDescription(q3i:end),' ');
                         q3f         = q_spaces(find(q_spaces>q3i,1));
-                        handles.levs        = str2num(dataIn_info(1).ImageDescription(q1i+7:q1f));
+                        
                         handles.numFrames   = str2num(dataIn_info(1).ImageDescription(q2i+7:q2f));
                         handles.numChannels = str2num(dataIn_info(1).ImageDescription(q3i+9:q3f));
        
