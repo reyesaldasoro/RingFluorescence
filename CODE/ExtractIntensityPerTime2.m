@@ -109,7 +109,6 @@ set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
 ylabel('time')
 zlabel('intensity')
-
 title('Track 44, Ch 1')
 
 h1 = figure(2);
@@ -124,6 +123,10 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 44, Ch 2')
+set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
 
 h1 = figure(3);
 h2 = gca;
@@ -137,6 +140,10 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 54, Ch 1')
+set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
 
 h1 = figure(4);
 h2 = gca;
@@ -150,6 +157,10 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 54, Ch 2')
+set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
 
 
 %%
