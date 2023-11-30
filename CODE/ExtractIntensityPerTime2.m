@@ -32,6 +32,41 @@ ring                = (distance_view>dimensionsRing(1)).*(distance_view<dimensio
 max_time            =max(max(t44B(:,9)),max(t54B(:,9)) );
 %% process T44 
 
+
+h1=figure(1);
+clf
+h221 = subplot(221);
+i221 = imagesc(zeros(61)); caxis([1 15000])
+ht = title('');
+hy1 = ylabel('Channel 1');
+h222 = subplot(222);
+i222 = imagesc(zeros(61)); caxis([1 15000])
+ht2 = title('');
+
+h223 = subplot(223);
+i223 = imagesc(zeros(61)); caxis([1 15000])
+
+hy2 = ylabel('Channel 2');
+h224 = subplot(224);
+i224 = imagesc(zeros(61)); caxis([1 15000])
+%%
+
+    % caxis([1 15000])
+    % title(strcat('Frame =',num2str(counterT)))
+    % subplot(222)
+    % imagesc(channel_1_ring)
+    % caxis([1 15000])
+    % colorbar
+    % subplot(223)
+    % imagesc(channel_2_crop)
+    % caxis([1 15000])
+    % title(strcat('Frame =',num2str(counterT)))
+    % subplot(224)
+    % imagesc(channel_2_ring)
+    % caxis([1 15000])
+
+clear F;
+
 max_time            = size(t44B,1);
 for counterT = 1 :max_time
     disp(counterT)
@@ -51,6 +86,32 @@ for counterT = 1 :max_time
     channel_2_crop      = channel_2(rr,cc);
     channel_1_ring      = ring .* channel_1_crop;
     channel_2_ring      = ring .* channel_2_crop;
+    i221.CData          = channel_1_crop;
+    i222.CData          = channel_1_ring;
+    i223.CData          = channel_2_crop;
+    i224.CData          = channel_1_ring;
+    
+    % %subplot(221)
+    % imagesc(channel_1_crop)
+    % caxis([1 15000])
+    ht.String =strcat('Iteration =',num2str(counterT));
+    ht2.String =strcat('Time Frame =',num2str(currentFrame));
+    % title(strcat('Frame =',num2str(counterT)))
+    % subplot(222)
+    % imagesc(channel_1_ring)
+    % caxis([1 15000])
+    % colorbar
+    % subplot(223)
+    % imagesc(channel_2_crop)
+    % caxis([1 15000])
+    % title(strcat('Frame =',num2str(counterT)))
+    % subplot(224)
+    % imagesc(channel_2_ring)
+    % caxis([1 15000])
+    % colorbar
+    % 
+     drawnow
+    F(counterT) = getframe(h1);
 
     for counterA=-pi:0.3:pi
         %intensityPerAngle = channel_1_ring.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
@@ -164,6 +225,11 @@ zlabel('intensity')
 
 
 %%
+
+ v = VideoWriter('Track44_video', 'MPEG-4');
+            open(v);
+            writeVideo(v,F);
+            close(v);
 
 % 
 % 
