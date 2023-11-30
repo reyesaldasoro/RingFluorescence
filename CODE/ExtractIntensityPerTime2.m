@@ -186,7 +186,7 @@ end
 
 %% Display
 
-h1 = figure(1);
+h1 = figure(11);
 h2 = gca;
 h3 = mesh(Intensity_OverTime_44_1);
 axis tight;
@@ -199,7 +199,7 @@ ylabel('time')
 zlabel('intensity')
 title('Track 44, Ch 1')
 
-h1 = figure(2);
+h1 = figure(12);
 h2 = gca;
 h3 = mesh(Intensity_OverTime_44_2);
 axis tight;
@@ -216,7 +216,7 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 
-h1 = figure(3);
+h1 = figure(13);
 h2 = gca;
 h3 = mesh(Intensity_OverTime_54_1);
 axis tight;
@@ -233,7 +233,7 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 
-h1 = figure(4);
+h1 = figure(14);
 h2 = gca;
 h3 = mesh(Intensity_OverTime_54_2);
 axis tight;
