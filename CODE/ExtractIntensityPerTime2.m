@@ -175,6 +175,15 @@ for counterT = 1 :max_time
     Intensity_OverTime_54_1(currentFrame,: ) =IntensityPerAngleT_1;
     Intensity_OverTime_54_2(currentFrame,: ) =IntensityPerAngleT_2;
 end
+%%
+
+ v = VideoWriter('Track54_video', 'MPEG-4');
+            open(v);
+            writeVideo(v,F);
+            close(v);
+
+
+
 %% Display
 
 h1 = figure(1);
