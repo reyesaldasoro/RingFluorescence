@@ -41,6 +41,7 @@ ht = title('');
 hy1 = ylabel('Channel 1');
 h222 = subplot(222);
 i222 = imagesc(zeros(61)); caxis([1 15000])
+
 ht2 = title('');
 
 h223 = subplot(223);
@@ -89,13 +90,13 @@ for counterT = 1 :max_time
     i221.CData          = channel_1_crop;
     i222.CData          = channel_1_ring;
     i223.CData          = channel_2_crop;
-    i224.CData          = channel_1_ring;
-    
+    i224.CData          = channel_2_ring;
+    ht.String =strcat('Iteration =',num2str(counterT));
+    ht2.String =strcat('Time Frame =',num2str(currentFrame));    
     % %subplot(221)
     % imagesc(channel_1_crop)
     % caxis([1 15000])
-    ht.String =strcat('Iteration =',num2str(counterT));
-    ht2.String =strcat('Time Frame =',num2str(currentFrame));
+
     % title(strcat('Frame =',num2str(counterT)))
     % subplot(222)
     % imagesc(channel_1_ring)
@@ -124,8 +125,16 @@ for counterT = 1 :max_time
     Intensity_OverTime_44_1(currentFrame,: ) =IntensityPerAngleT_1;
     Intensity_OverTime_44_2(currentFrame,: ) =IntensityPerAngleT_2;
 end
+%%
+ v = VideoWriter('Track44_video', 'MPEG-4');
+            open(v);
+            writeVideo(v,F);
+            close(v);
+
+
 %% process T54 
 
+clear F;
 max_time            = size(t54B,1);
 for counterT = 1 :max_time
     disp(counterT)
@@ -146,6 +155,15 @@ for counterT = 1 :max_time
     channel_1_ring      = ring .* channel_1_crop;
     channel_2_ring      = ring .* channel_2_crop;
 
+    i221.CData          = channel_1_crop;
+    i222.CData          = channel_1_ring;
+    i223.CData          = channel_2_crop;
+    i224.CData          = channel_2_ring;
+    ht.String =strcat('Iteration =',num2str(counterT));
+    ht2.String =strcat('Time Frame =',num2str(currentFrame));    
+
+         drawnow
+    F(counterT) = getframe(h1);
     for counterA=-pi:0.3:pi
         %intensityPerAngle = channel_1_ring.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
         %intensityPerAngle = channel_1_ring.*((angle_viewC>counterA).*(angle_viewC<(counterA+0.3)));
@@ -226,10 +244,6 @@ zlabel('intensity')
 
 %%
 
- v = VideoWriter('Track44_video', 'MPEG-4');
-            open(v);
-            writeVideo(v,F);
-            close(v);
 
 % 
 % 
