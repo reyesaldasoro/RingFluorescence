@@ -25,7 +25,7 @@ t54B(:,5:6)     = t54B(:,5:6)/0.1729938;
 angle_view          = angle(xx_t+1i*yy_t);
 distance_view       = sqrt(xx_t.^2+yy_t.^2);
 % Set the dimensions of the ring
-dimensionsRing                          = [9 24];
+dimensionsRing                          = [0 12];
 ring                = (distance_view>dimensionsRing(1)).*(distance_view<dimensionsRing(2));
 
 
@@ -113,6 +113,7 @@ for counterT = 1 :max_time
     % 
      drawnow
     F(counterT) = getframe(h1);
+    pause(0.1)
 
     for counterA=-pi:0.3:pi
         %intensityPerAngle = channel_1_ring.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
@@ -124,6 +125,11 @@ for counterT = 1 :max_time
     end
     Intensity_OverTime_44_1(currentFrame,: ) =IntensityPerAngleT_1;
     Intensity_OverTime_44_2(currentFrame,: ) =IntensityPerAngleT_2;
+
+    for counterD = 1 : max(dimensionsRing )
+        intensityPerDistance(counterD) = sum(sum(channel_2_ring.*(round(distance_view)==counterD) ));
+    end
+    Intensity_OverTime_44_3(currentFrame,: ) =intensityPerDistance;
 end
 %%
  v = VideoWriter('Track44_video', 'MPEG-4');
@@ -163,6 +169,7 @@ for counterT = 1 :max_time
     ht2.String =strcat('Time Frame =',num2str(currentFrame));    
 
          drawnow
+          pause(0.02)
     F(counterT) = getframe(h1);
     for counterA=-pi:0.3:pi
         %intensityPerAngle = channel_1_ring.*((angle_view>counterA).*(angle_view<(counterA+0.3)));
@@ -174,6 +181,12 @@ for counterT = 1 :max_time
     end
     Intensity_OverTime_54_1(currentFrame,: ) =IntensityPerAngleT_1;
     Intensity_OverTime_54_2(currentFrame,: ) =IntensityPerAngleT_2;
+
+    for counterD = 1 : max(dimensionsRing )
+        intensityPerDistance(counterD) = sum(sum(channel_2_ring.*(round(distance_view)==counterD) ));
+    end
+    Intensity_OverTime_54_3(currentFrame,: ) =intensityPerDistance;
+
 end
 %%
 
@@ -251,6 +264,44 @@ ylabel('time')
 zlabel('intensity')
 
 
+%%
+
+h1 = figure(15);
+h2 = gca;
+h3 = mesh(Intensity_OverTime_44_3(:,end:-1:1));
+axis tight;
+h1.Position = [400  400  900  350];
+h2.View = [100 30];
+%set(gca,'xtick',1:3:21)
+%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
+title('Track 44, Ch 2')
+%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
+% h2.YTick = 20:50:1700;
+%  h2.YTickLabel = round((h2.YTick-665)*3.56/60);
+h1 = figure(16);
+h2 = gca;
+h3 = mesh(Intensity_OverTime_54_3(:,end:-1:1));
+axis tight;
+h1.Position = [400  400  900  350];
+h2.View = [100 30];
+%set(gca,'xtick',1:3:21)
+%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
+title('Track 54, Ch 2')
+%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+xlabel('angle')
+ylabel('time')
+zlabel('intensity')
+% h2.YTick = 20:50:1700;
+% h2.YTickLabel = round((h2.YTick-665)*3.56/60);
 %%
 
 
