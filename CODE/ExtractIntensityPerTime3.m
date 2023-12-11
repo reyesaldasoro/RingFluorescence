@@ -1,5 +1,7 @@
 clear all
 close all
+clc
+cd ('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\CODE')
 %%
 
 baseDir         = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\Dataset_One_Whole\';
@@ -73,8 +75,8 @@ max_time            = size(t64B,1);
 for counterT = 1 :max_time
     disp(counterT)
     currentFrame    = t64B(counterT,9);
-    channel_1       = double(imread(strcat(baseDir,dir1(currentFrame).name)));
-    channel_2       = double(imread(strcat(baseDir,dir2(currentFrame).name)));
+    channel_1       = double(imread(strcat(baseDir,dir1(currentFrame+1).name)));
+    channel_2       = double(imread(strcat(baseDir,dir2(currentFrame+1).name)));
 
     %combined(:,:,1)     = channel_1/max(channel_1(:));
     %combined(:,:,2)     = channel_2/max(channel_2(:));
@@ -146,8 +148,8 @@ max_time            = size(t55B,1);
 for counterT = 1 :max_time
     disp(counterT)
     currentFrame    = t55B(counterT,9);
-    channel_1       = double(imread(strcat(baseDir,dir1(currentFrame).name)));
-    channel_2       = double(imread(strcat(baseDir,dir2(currentFrame).name)));
+    channel_1       = double(imread(strcat(baseDir,dir1(currentFrame+1).name)));
+    channel_2       = double(imread(strcat(baseDir,dir2(currentFrame+1).name)));
 
     %combined(:,:,1)     = channel_1/max(channel_1(:));
     %combined(:,:,2)     = channel_2/max(channel_2(:));
