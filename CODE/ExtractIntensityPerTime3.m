@@ -28,7 +28,7 @@ t55B(:,5:6)     = t55B(:,5:6)/0.1729938;
 angle_view          = angle(xx_t+1i*yy_t);
 distance_view       = sqrt(xx_t.^2+yy_t.^2);
 % Set the dimensions of the ring
-dimensionsRing                          = [0 12];
+dimensionsRing                          = [0 6];
 ring                = (distance_view>dimensionsRing(1)).*(distance_view<dimensionsRing(2));
 
 
@@ -135,7 +135,7 @@ for counterT = 1 :max_time
     Intensity_OverTime_64_3(currentFrame,: ) =intensityPerDistance;
 end
 %%
- v = VideoWriter('Track64_video', 'MPEG-4');
+ v = VideoWriter('Track64_video_6_2023_12_13', 'MPEG-4');
             open(v);
             writeVideo(v,F);
             close(v);
@@ -193,79 +193,112 @@ for counterT = 1 :max_time
 end
 %%
 
- v = VideoWriter('Track55_video', 'MPEG-4');
+ v = VideoWriter('Track55_video_6_2023_12_13', 'MPEG-4');
             open(v);
             writeVideo(v,F);
             close(v);
 
+%% Post process:
+% 1 Filter
+Intensity_OverTime_55_1_LPF = imfilter(Intensity_OverTime_55_1,ones(5,5)/25,'replicate');
+Intensity_OverTime_55_2_LPF = imfilter(Intensity_OverTime_55_2,ones(5,5)/25,'replicate');
+Intensity_OverTime_64_1_LPF = imfilter(Intensity_OverTime_64_1,ones(5,5)/25,'replicate');
+Intensity_OverTime_64_2_LPF = imfilter(Intensity_OverTime_64_2,ones(5,5)/25,'replicate');
 
+Intensity_OverTime_55_1_LPF(Intensity_OverTime_55_1==0)=nan;
+Intensity_OverTime_55_2_LPF(Intensity_OverTime_55_2==0)=nan;
+Intensity_OverTime_64_1_LPF(Intensity_OverTime_64_1==0)=nan;
+Intensity_OverTime_64_2_LPF(Intensity_OverTime_64_2==0)=nan;
 
 %% Display
 
+startpoint = 5*60/3.56;
+
 h1 = figure(11);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_64_1);
+h3 = mesh(Intensity_OverTime_64_1_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
-h2.View = [100 30];
+h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+%h2.YTick = 20:50:1700;
+%h2.YTickLabel = round((h2.YTick)*3.56/60);
+h2.YTick = startpoint:5*(60/3.56):1700;
+h2.YTickLabel = round((h2.YTick-200)*3.56/60);
 xlabel('angle')
-ylabel('time')
+ylabel('time [min]')
 zlabel('intensity')
 title('Track 64, Ch 1')
+ colormap hot
+%%
 
 h1 = figure(12);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_64_2);
+h3 = mesh(Intensity_OverTime_64_2_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
-h2.View = [100 30];
+h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+%h2.YTick = 20:50:1700;
+%h2.YTickLabel = round((h2.YTick)*3.56/60);
+h2.YTick = startpoint:5*(60/3.56):1700;
+h2.YTickLabel = round((h2.YTick)*3.56/60);
 xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 64, Ch 2')
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
-ylabel('time')
+ylabel('time [min]')
 zlabel('intensity')
+ colormap hot
 
+%%
 h1 = figure(13);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_55_1);
+h3 = mesh(Intensity_OverTime_55_1_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
-h2.View = [100 30];
+h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+%h2.YTick = 20:50:1700;
+%h2.YTickLabel = round((h2.YTick)*3.56/60);
+h2.YTick = startpoint:5*(60/3.56):1700;
+h2.YTickLabel = round((h2.YTick-65)*3.56/60);
 xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 55, Ch 1')
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
-ylabel('time')
+ylabel('time [min]')
 zlabel('intensity')
+ colormap hot
+%%
 
 h1 = figure(14);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_55_2);
+h3 = mesh(Intensity_OverTime_55_2_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
-h2.View = [100 30];
+h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-xlabel('angle')
+%h2.YTick = 60:(60/3.56):1700;
+%h2.YTickLabel = round((h2.YTick)*3.56/60);
+h2.YTick = startpoint:5*(60/3.56):1700;
+h2.YTickLabel = round((h2.YTick)*3.56/60);xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 55, Ch 2')
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
-ylabel('time')
+ylabel('time [min]')
 zlabel('intensity')
-
+ colormap hot
 
 %%
 
