@@ -12,8 +12,8 @@ dir2            = dir (strcat(baseDir,'*_c0002.tif'));
 load('Dataset_One_Tracks_2023_12_13.mat')
 %%
 
-t76             = Dataset_One_Tracks_2023_12_04(Dataset_One_Tracks_2023_12_04(:,3)==76,:);
-t80             = Dataset_One_Tracks_2023_12_04(Dataset_One_Tracks_2023_12_04(:,3)==80,:);
+t76             = Dataset_One_Tracks_2023_12_13(Dataset_One_Tracks_2023_12_13(:,3)==76,:);
+t80             = Dataset_One_Tracks_2023_12_13(Dataset_One_Tracks_2023_12_13(:,3)==80,:);
 [~,index76]     = sort(t76(:,9),'ascend');
 [~,index80]     = sort(t80(:,9),'ascend');
 
@@ -135,7 +135,7 @@ for counterT = 1 :max_time
     Intensity_OverTime_76_3(currentFrame,: ) =intensityPerDistance;
 end
 %%
- v = VideoWriter('Track76_video_6_2023_12_13', 'MPEG-4');
+ v = VideoWriter('Track76_video_6_2023_12_14', 'MPEG-4');
             open(v);
             writeVideo(v,F);
             close(v);
@@ -193,17 +193,17 @@ for counterT = 1 :max_time
 end
 %%
 
- v = VideoWriter('Track80_video_6_2023_12_13', 'MPEG-4');
+ v = VideoWriter('Track80_video_6_2023_12_14', 'MPEG-4');
             open(v);
             writeVideo(v,F);
             close(v);
 
 %% Post process:
 % 1 Filter
-Intensity_OverTime_80_1_LPF = imfilter(Intensity_OverTime_80_1,ones(5,5)/25,'replicate');
-Intensity_OverTime_80_2_LPF = imfilter(Intensity_OverTime_80_2,ones(5,5)/25,'replicate');
-Intensity_OverTime_76_1_LPF = imfilter(Intensity_OverTime_76_1,ones(5,5)/25,'replicate');
-Intensity_OverTime_76_2_LPF = imfilter(Intensity_OverTime_76_2,ones(5,5)/25,'replicate');
+Intensity_OverTime_80_1_LPF = imfilter(Intensity_OverTime_80_1,ones(3,3)/9,'replicate');
+Intensity_OverTime_80_2_LPF = imfilter(Intensity_OverTime_80_2,ones(3,3)/9,'replicate');
+Intensity_OverTime_76_1_LPF = imfilter(Intensity_OverTime_76_1,ones(3,3)/9,'replicate');
+Intensity_OverTime_76_2_LPF = imfilter(Intensity_OverTime_76_2,ones(3,3)/9,'replicate');
 
 Intensity_OverTime_80_1_LPF(Intensity_OverTime_80_1==0)=nan;
 Intensity_OverTime_80_2_LPF(Intensity_OverTime_80_2==0)=nan;
@@ -230,7 +230,7 @@ xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
 title('Track 76, Ch 1')
- colormap hot
+ colormap jet
 %%
 
 h1 = figure(12);
@@ -253,7 +253,7 @@ set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
- colormap hot
+ colormap jet
 
 %%
 h1 = figure(13);
@@ -276,7 +276,7 @@ set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
- colormap hot
+ colormap jet
 %%
 
 h1 = figure(14);
@@ -298,7 +298,7 @@ set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
- colormap hot
+ colormap jet
 
 %%
 
