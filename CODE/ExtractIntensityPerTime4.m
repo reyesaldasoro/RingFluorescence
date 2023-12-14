@@ -211,8 +211,8 @@ Intensity_OverTime_76_1_LPF(Intensity_OverTime_76_1==0)=nan;
 Intensity_OverTime_76_2_LPF(Intensity_OverTime_76_2==0)=nan;
 
 %% Display
-
-startpoint = 5*60/3.56;
+frameInterval = 3.56; % this is the frame interval you have provided
+startpoint = 5*60/frameInterval; % this is the time of the first tick in minutes
 
 h1 = figure(11);
 h2 = gca;
@@ -223,15 +223,14 @@ h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 %h2.YTick = 20:50:1700;
-%h2.YTickLabel = round((h2.YTick)*3.56/60);
-h2.YTick = startpoint:5*(60/3.56):1700;
-h2.YTickLabel = round((h2.YTick-200)*3.56/60);
+%h2.YTickLabel = round((h2.YTick)*frameInterval/60);
+h2.YTick = startpoint:5*(60/frameInterval):1700;
+h2.YTickLabel = round((h2.YTick-200)*frameInterval/60);
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
 title('Track 76, Ch 1')
  colormap jet
-%%
 
 h1 = figure(12);
 h2 = gca;
@@ -242,9 +241,9 @@ h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 %h2.YTick = 20:50:1700;
-%h2.YTickLabel = round((h2.YTick)*3.56/60);
-h2.YTick = startpoint:5*(60/3.56):1700;
-h2.YTickLabel = round((h2.YTick)*3.56/60);
+%h2.YTickLabel = round((h2.YTick)*frameInterval/60);
+h2.YTick = startpoint:5*(60/frameInterval):1700;
+h2.YTickLabel = round((h2.YTick)*frameInterval/60);
 xlabel('angle')
 ylabel('time')
 zlabel('intensity')
@@ -255,7 +254,7 @@ ylabel('time [min]')
 zlabel('intensity')
  colormap jet
 
-%%
+
 h1 = figure(13);
 h2 = gca;
 h3 = mesh(Intensity_OverTime_80_1_LPF);
@@ -265,9 +264,9 @@ h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
 %h2.YTick = 20:50:1700;
-%h2.YTickLabel = round((h2.YTick)*3.56/60);
-h2.YTick = startpoint:5*(60/3.56):1700;
-h2.YTickLabel = round((h2.YTick-65)*3.56/60);
+%h2.YTickLabel = round((h2.YTick)*frameInterval/60);
+h2.YTick = startpoint:5*(60/frameInterval):1700;
+h2.YTickLabel = round((h2.YTick-65)*frameInterval/60);
 xlabel('angle')
 ylabel('time')
 zlabel('intensity')
@@ -277,7 +276,7 @@ xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
  colormap jet
-%%
+
 
 h1 = figure(14);
 h2 = gca;
@@ -287,10 +286,10 @@ h1.Position = [400  400  900  350];
 h2.View = [110 60];
 set(gca,'xtick',1:3:21)
 set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-%h2.YTick = 60:(60/3.56):1700;
-%h2.YTickLabel = round((h2.YTick)*3.56/60);
-h2.YTick = startpoint:5*(60/3.56):1700;
-h2.YTickLabel = round((h2.YTick)*3.56/60);xlabel('angle')
+%h2.YTick = 60:(60/frameInterval):1700;
+%h2.YTickLabel = round((h2.YTick)*frameInterval/60);
+h2.YTick = startpoint:5*(60/frameInterval):1700;
+h2.YTickLabel = round((h2.YTick)*frameInterval/60);xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 80, Ch 2')
@@ -300,55 +299,81 @@ ylabel('time [min]')
 zlabel('intensity')
  colormap jet
 
-%%
+%% IGNORE, these are intensity from centre of disk
+% 
+% h1 = figure(15);
+% h2 = gca;
+% h3 = mesh(Intensity_OverTime_76_3(:,end:-1:1));
+% axis tight;
+% h1.Position = [400  400  900  350];
+% h2.View = [100 30];
+% %set(gca,'xtick',1:3:21)
+% %set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+% xlabel('angle')
+% ylabel('time')
+% zlabel('intensity')
+% title('Track 76, Ch 2')
+% %set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+% xlabel('angle')
+% ylabel('time')
+% zlabel('intensity')
+% % h2.YTick = 20:50:1700;
+% %  h2.YTickLabel = round((h2.YTick-665)*frameInterval/60);
+% h1 = figure(16);
+% h2 = gca;
+% h3 = mesh(Intensity_OverTime_80_3(:,end:-1:1));
+% axis tight;
+% h1.Position = [400  400  900  350];
+% h2.View = [100 30];
+% %set(gca,'xtick',1:3:21)
+% %set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+% xlabel('angle')
+% ylabel('time')
+% zlabel('intensity')
+% title('Track 80, Ch 2')
+% %set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+% xlabel('angle')
+% ylabel('time')
+% zlabel('intensity')
+% % h2.YTick = 20:50:1700;
+% % h2.YTickLabel = round((h2.YTick-665)*frameInterval/60);
+%% Median Intesity graphs 1D
+% if you want the graph to start at a different point, you need to change
+% the number 1 in 1:end for that number, like 464, notice that it is NOT
+% the time in seconds, but the actual frame number. For this it may be
+% easier to comment on the line that adjusts the axis, plot, find the
+% value, and then plot again with the adjusted axis.
 
-h1 = figure(15);
+frameInterval = 3.56;               % this is the frame interval you have provided
+startpoint = 5*60/frameInterval;    % this is the time of the first tick in minutes
+
+h1 = figure(21);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_76_3(:,end:-1:1));
-axis tight;
-h1.Position = [400  400  900  350];
-h2.View = [100 30];
-%set(gca,'xtick',1:3:21)
-%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-xlabel('angle')
-ylabel('time')
-zlabel('intensity')
-title('Track 76, Ch 2')
-%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-xlabel('angle')
-ylabel('time')
-zlabel('intensity')
-% h2.YTick = 20:50:1700;
-%  h2.YTickLabel = round((h2.YTick-665)*3.56/60);
-h1 = figure(16);
+% If you want the plot to start somewhere other than the first frame,
+% change the 1 for the value you want, in the line below 464 seems good for
+% this plot
+plot((median(Intensity_OverTime_76_1_LPF(1:end,:),2)),'k','linewidth',1);grid on;
+ylabel('Intensity [a.u.]')
+xlabel('time [min]')
+
+h2.XTick                = startpoint:5*(60/frameInterval):1800;
+h2.XTickLabel           = round((h2.XTick)*frameInterval/60);
+h2.XTickLabelRotation   = 90;
+h1.Position             = [200  400  800  260];
+h2.FontSize             = 12;
+h2.Position             = [0.09 0.22 0.88 0.73 ];
+
+
+h1 = figure(22);
 h2 = gca;
-h3 = mesh(Intensity_OverTime_80_3(:,end:-1:1));
-axis tight;
-h1.Position = [400  400  900  350];
-h2.View = [100 30];
-%set(gca,'xtick',1:3:21)
-%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-xlabel('angle')
-ylabel('time')
-zlabel('intensity')
-title('Track 80, Ch 2')
-%set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
-xlabel('angle')
-ylabel('time')
-zlabel('intensity')
-% h2.YTick = 20:50:1700;
-% h2.YTickLabel = round((h2.YTick-665)*3.56/60);
-%%
+plot((median(Intensity_OverTime_80_1_LPF(1:end,:),2)),'k','linewidth',1);grid on;
+ylabel('Intensity [a.u.]')
+xlabel('time [min]')
 
+h2.XTick                = startpoint:5*(60/frameInterval):1800;
+h2.XTickLabel           = round((h2.XTick)*frameInterval/60);
+h2.XTickLabelRotation   = 90;
+h1.Position             = [200  400  800  260];
+h2.FontSize             = 12;
+h2.Position             = [0.09 0.22 0.88 0.73 ];
 
-% 
-% 
-% a=imread('Dataset_One_Whole_t0100_c0001.tif');
-% b=imread('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\Dataset_One_Whole\Dataset_One_Whole_t0100_c0002.tif');
-% imagesc(b+a)
-% 
-% 
-% imagesc(b+a)
-% hold
-% plot3(t76(index76,5)/0.1729938,t76(index76,6)/0.1729938,t76(index76,9),'m-.')
-% plot3(t80(index80,5)/0.1729938,t80(index80,6)/0.1729938,t80(index80,9),'c-.')
