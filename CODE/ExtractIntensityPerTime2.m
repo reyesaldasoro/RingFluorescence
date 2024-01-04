@@ -1,5 +1,7 @@
 clear all
 close all
+clc
+cd ('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\CODE')
 %%
 
 baseDir         = 'C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\RingFluorescence\Dataset_One_Whole\';
@@ -7,6 +9,8 @@ dir1            = dir (strcat(baseDir,'*_c0002.tif'));
 dir2            = dir (strcat(baseDir,'*_c0001.tif'));
 
 load('Dataset_One_Whole_Tracks.mat')
+
+%%
 q               = table2cell(DatasetOneWholeTracks);
 q2              = cell2mat(q);
 t44             = q2(q2(:,3)==44,:);
