@@ -8,8 +8,8 @@ baseDir         = 'C:\Users\sbbk034\OneDrive - City, University of London\Docume
 dir1            = dir (strcat(baseDir,'*_c0001.tif'));
 dir2            = dir (strcat(baseDir,'*_c0002.tif'));
 
-
 load('Dataset_One_Tracks_2023_12_13.mat')
+
 %%
 
 t76             = Dataset_One_Tracks_2023_12_13(Dataset_One_Tracks_2023_12_13(:,3)==76,:);
