@@ -31,7 +31,7 @@ Tracks{1}           = [149 80 108 151];
 Tracks{2}           = 1;
 Tracks{3}           = 0;
 Tracks{4}           = [20 21 25];
-frameInterval       = {3.56,2.85,8.35,3.56}; % this is the frame interval you have provided
+frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
 callibrationXY      = 0.1729938;
 
 
@@ -69,7 +69,7 @@ hx24 = xlabel('');
 
 
 
-for counterSet      = 1:3
+for counterSet      = 4
     numTracks       = numel(Tracks{counterSet});
     for counterTrack    = 1:numTracks
         clear F;
@@ -135,7 +135,7 @@ for counterSet      = 1:3
 end
 %% Process Intensities
 
-for counterSet      = 1:3
+for counterSet      = 1:4
     numTracks       = numel(Tracks{counterSet});
     for counterTrack    = 1:numTracks
         for counterK    = 1:3
@@ -145,4 +145,11 @@ for counterSet      = 1:3
     end
 end
 %%
- plot(mean(Intensity_OverTime{3,1},2))
+figure
+hold on
+for counterSet      = 1:4
+    numTracks       = numel(Tracks{counterSet});
+    for counterTrack    = 1:numTracks
+        plot(mean(Intensity_OverTime_LPF{counterSet,counterTrack,1},2))
+    end
+end
