@@ -31,6 +31,8 @@ Tracks{1}           = [149 80 108 151];
 Tracks{2}           = 1;
 Tracks{3}           = 0;
 Tracks{4}           = [20 21 25];
+
+TracksInLine        = [149 80 108 151 1 0 20 21 25];
 frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
 callibrationXY      = 0.1729938;
 
@@ -64,7 +66,7 @@ h224 = subplot(224);
 i224 = imagesc(zeros(61)); caxis([1 15000])
 hx24 = xlabel('');
 
-%% Process the tracks
+%% Record the tracks
 
 
 
@@ -133,7 +135,7 @@ for counterSet      = 4
         close(v);
     end
 end
-%% Process Intensities
+%% Process Intensities by filtering
 
 for counterSet      = 1:4
     numTracks       = numel(Tracks{counterSet});
@@ -147,9 +149,23 @@ end
 %%
 figure
 hold on
-for counterSet      = 1:4
-    numTracks       = numel(Tracks{counterSet});
-    for counterTrack    = 1:numTracks
-        plot(mean(Intensity_OverTime_LPF{counterSet,counterTrack,1},2))
+q=1;
+for counterSet              = 1:4
+    numTracks               = numel(Tracks{counterSet});
+    for counterTrack        = 1:numTracks
+        currentTrack        = Intensity_OverTime_LPF{counterSet,counterTrack,1};
+        currentTrack2       = mean(currentTrack,2);
+        currentFrames       = 1:size(currentTrack,1);
+        currentTime         = (currentFrames*frameInterval{counterSet}/60)';
+        firstValidPoint     =  find(~isnan(currentTrack2),1);
+        avFirstFiveValid    = median(currentTrack2(firstValidPoint:firstValidPoint+5));
+        currentTrack3       = currentTrack2 - avFirstFiveValid;
+        maxCurrentTrack3    = max(currentTrack3);
+        currentTrack4       = currentTrack3(firstValidPoint:end)/maxCurrentTrack3;
+        currentTime4        = currentTime(firstValidPoint:end)-currentTime(firstValidPoint);
+        currentZ            = q*ones(size(currentTime4));
+        plot3(currentZ,currentTime4,currentTrack4) 
+        q=q+1;
     end
 end
+ grid on;axis tight
