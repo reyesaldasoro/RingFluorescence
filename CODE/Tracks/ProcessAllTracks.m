@@ -26,7 +26,7 @@ AllDatasets{3}      = Dataset_Three_Tracks_2024_01_12;
 AllDatasets{4}      = Dataset_Four_Tracks_2024_01_17;
 
 
-% Parameters
+%% Parameters
 Tracks{1}           = [149 80 108 151];
 Tracks{2}           = 1;
 Tracks{3}           = 0;
@@ -36,7 +36,7 @@ TracksInLine        = [149 80 108 151 1 0 20 21 25];
 frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
 callibrationXY      = 0.1729938;
 
-
+%%
 [xx_t,yy_t]         = meshgrid(-30:30,-30:30);
 angle_view          = angle(xx_t+1i*yy_t);
 distance_view       = sqrt(xx_t.^2+yy_t.^2);
@@ -136,7 +136,9 @@ for counterSet      = 4
     end
 end
 %% Process Intensities by filtering
-
+% if starting with the saved values 
+% load('Intensity_OverTime_2024_01_18.mat')
+% Requires PARAMETERS previous lines
 for counterSet      = 1:4
     numTracks       = numel(Tracks{counterSet});
     for counterTrack    = 1:numTracks
@@ -146,10 +148,12 @@ for counterSet      = 1:4
         end
     end
 end
-%%
+%% Plots
 figure
 hold on
+h1=gca;
 q=1;
+aggregatedTracks=nan(1000,9);
 for counterSet              = 1:4
     numTracks               = numel(Tracks{counterSet});
     for counterTrack        = 1:numTracks
@@ -164,8 +168,30 @@ for counterSet              = 1:4
         currentTrack4       = currentTrack3(firstValidPoint:end)/maxCurrentTrack3;
         currentTime4        = currentTime(firstValidPoint:end)-currentTime(firstValidPoint);
         currentZ            = q*ones(size(currentTime4));
-        plot3(currentZ,currentTime4,currentTrack4) 
-        q=q+1;
+        currentTrack5       = fillmissing(currentTrack4,'previous');
+        currentTrack6       = imfilter(currentTrack5,ones(55,1)/55,'replicate');
+        aggregatedTracks(1+round(currentTime4*10),q)=currentTrack5;
+        % Plot in 3D, normalised data
+        plot3(currentZ,currentTime4,currentTrack4);         q=q+1;
+        % Plot in 3D, normalised data - trend
+        %plot3(currentZ,currentTime4,currentTrack4-currentTrack6);         q=q+1;
     end
 end
- grid on;axis tight
+ grid on;axis tight; 
+ % For 3D
+ view(105,39);  legend(num2str(TracksInLine'));   h1.XTick=1:q;  h1.XTickLabel=TracksInLine;
+%% plot Mean +- std
+figure
+hold on
+aggregatedTracks2                       = fillmissing(aggregatedTracks,'next');
+aggregatedTracks2(aggregatedTracks2==0) = nan;
+meanAggregated                          = mean(aggregatedTracks2,2,"omitnan");
+stdAggregated                           = (std(aggregatedTracks2',"omitmissing"))';
+timeAggregated                          = (1:numel(meanAggregated))/10;
+plot (timeAggregated,meanAggregated,'k-','linewidth',2);
+plot (timeAggregated,meanAggregated+stdAggregated,'--','color',0.4*[1 1 1],'linewidth',1);
+plot (timeAggregated,meanAggregated-stdAggregated,'--','color',0.4*[1 1 1],'linewidth',1);
+ grid on;axis tight; 
+ ylabel('Intensity [a.u.]','FontSize',14)
+xlabel('Time [min]','FontSize',14)
+axis([0 101 0 1])
