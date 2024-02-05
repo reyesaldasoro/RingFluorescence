@@ -8,7 +8,7 @@ baseDir         = 'C:\Users\sbbk034\OneDrive - City, University of London\Docume
 dir1            = dir (strcat(baseDir,'*_c0001.tif'));
 dir2            = dir (strcat(baseDir,'*_c0002.tif'));
 
-load('Dataset_One_Tracks_2023_12_13.mat')
+load('tracks/Dataset_One_Tracks_2023_12_13.mat')
 
 %%
 
@@ -28,7 +28,7 @@ t80B(:,5:6)     = t80B(:,5:6)/0.1729938;
 angle_view          = angle(xx_t+1i*yy_t);
 distance_view       = sqrt(xx_t.^2+yy_t.^2);
 % Set the dimensions of the ring
-dimensionsRing                          = [0 6];
+dimensionsRing                          = [0 30];
 ring                = (distance_view>dimensionsRing(1)).*(distance_view<dimensionsRing(2));
 
 
@@ -220,8 +220,8 @@ h3 = mesh(Intensity_OverTime_76_1_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
 h2.View = [110 60];
-set(gca,'xtick',1:3:21)
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xtick',linspace(1,21,7))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 %h2.YTick = 20:50:1700;
 %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
 h2.YTick = startpoint:5*(60/frameInterval):1700;
@@ -238,8 +238,8 @@ h3 = mesh(Intensity_OverTime_76_2_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
 h2.View = [110 60];
-set(gca,'xtick',1:3:21)
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xtick',linspace(1,21,7))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 %h2.YTick = 20:50:1700;
 %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
 h2.YTick = startpoint:5*(60/frameInterval):1700;
@@ -248,7 +248,7 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 76, Ch 2')
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
@@ -261,8 +261,8 @@ h3 = mesh(Intensity_OverTime_80_1_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
 h2.View = [110 60];
-set(gca,'xtick',1:3:21)
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xtick',linspace(1,21,7))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 %h2.YTick = 20:50:1700;
 %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
 h2.YTick = startpoint:5*(60/frameInterval):1700;
@@ -271,7 +271,7 @@ xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 80, Ch 1')
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
@@ -284,8 +284,8 @@ h3 = mesh(Intensity_OverTime_80_2_LPF);
 axis tight;
 h1.Position = [400  400  900  350];
 h2.View = [110 60];
-set(gca,'xtick',1:3:21)
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xtick',linspace(1,21,7))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 %h2.YTick = 60:(60/frameInterval):1700;
 %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
 h2.YTick = startpoint:5*(60/frameInterval):1700;
@@ -293,7 +293,7 @@ h2.YTickLabel = round((h2.YTick)*frameInterval/60);xlabel('angle')
 ylabel('time')
 zlabel('intensity')
 title('Track 80, Ch 2')
-set(gca,'xticklabel',num2str(linspace(-3.14,3.14,7)',3))
+set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
 xlabel('angle')
 ylabel('time [min]')
 zlabel('intensity')
