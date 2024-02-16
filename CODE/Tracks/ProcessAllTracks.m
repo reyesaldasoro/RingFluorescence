@@ -210,7 +210,9 @@ for counterSet      = 1:4
             title(strcat('Track',32,num2str(Tracks{counterSet}(counterTrack)),', Ch',32,num2str(counterK)))
             colormap jet
             filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_16.png');
-            print('-dpng','-r400',filename)
+            %print('-dpng','-r400',filename)
+            filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_16.fig');
+            savefig(gcf,filename2)
         end
     end
 end
