@@ -160,15 +160,37 @@ end
 counterSet      = 4 ;
 counterTrack    = 3;
 counterK        = 2;
-frameInterval = 3.56; % this is the frame interval you have provided
-startpoint = 5*60/frameInterval; % this is the time of the first tick in minutes
+frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
+%frameInterval = 3.56; % this is the frame interval you have provided
 for counterSet      = 1:4
+    startpoint = 5*60/frameInterval{counterSet}; % this is the time of the first tick in minutes
+        currentFrames       = 1:size(currentTrack,1);
+        currentTime         = (currentFrames*frameInterval{counterSet}/60)';
     numTracks       = numel(Tracks{counterSet});
     for counterTrack    =  1:numTracks
         for counterK    = 1:2
             h1 = figure;
             h2 = gca;
-            h3 = mesh(Intensity_OverTime_LPF{counterSet,counterTrack,counterK});
+
+            currentTrack        = Intensity_OverTime_LPF{counterSet,counterTrack,counterK};
+            currentTrack2       = mean(currentTrack,2);
+            currentFrames       = 1:size(currentTrack,1);
+            currentTime         = (currentFrames*frameInterval{counterSet}/60)';
+            firstValidPoint     =  find(~isnan(currentTrack2),1);
+            avFirstFiveValid    = median(currentTrack2(firstValidPoint:firstValidPoint+5));
+
+
+            currentTime         = (currentFrames*frameInterval{counterSet}/60)';
+            firstValidPoint     =  find(~isnan(currentTrack2),1);
+            avFirstFiveValid    = median(currentTrack2(firstValidPoint:firstValidPoint+5));
+            currentTrack3       = currentTrack - avFirstFiveValid;
+            maxCurrentTrack3    = max(max(currentTrack3));
+            currentTrack4       = currentTrack3(firstValidPoint:end,:)/maxCurrentTrack3;
+            currentTime4        = currentTime(firstValidPoint:end)-currentTime(firstValidPoint);
+
+
+            %h3 = mesh(Intensity_OverTime_LPF{counterSet,counterTrack,counterK});
+            h3 = mesh(currentTrack4);
             axis tight;
 
 
@@ -180,6 +202,8 @@ for counterSet      = 1:4
             %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
             %h2.YTick = startpoint:5*(60/frameInterval):1700;
             %h2.YTickLabel = round((h2.YTick-200)*frameInterval/60);
+            h2.YTickLabel = round(currentTime4(h2.YTick));
+
             xlabel('angle')
             ylabel('time [min]')
             zlabel('intensity')
