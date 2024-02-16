@@ -73,7 +73,7 @@ hx24 = xlabel('');
 
 for counterSet      = 4
     numTracks       = numel(Tracks{counterSet});
-    for counterTrack    = 1:numTracks
+    for counterTrack    = 3% 1:numTracks
         clear F;
         currentSet      = AllDatasets{counterSet};
         currentTrack    = currentSet(currentSet(:,3)==Tracks{counterSet}(counterTrack),:);
@@ -137,17 +137,60 @@ for counterSet      = 4
 end
 %% Process Intensities by filtering
 % if starting with the saved values 
-% load('Intensity_OverTime_2024_01_18.mat')
+ load('Intensity_OverTime_2024_01_18.mat')
 % Requires PARAMETERS previous lines
+Tracks{1}           = [149 80 108 151];
+Tracks{2}           = 1;
+Tracks{3}           = 0;
+Tracks{4}           = [20 21 25];
+TracksInLine        = [149 80 108 151 1 0 20 21 25];
+frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
+callibrationXY      = 0.1729938;
+%%
 for counterSet      = 1:4
     numTracks       = numel(Tracks{counterSet});
-    for counterTrack    = 1:numTracks
+    for counterTrack    =  1:numTracks
         for counterK    = 1:3
             Intensity_OverTime_LPF{counterSet,counterTrack,counterK} = imfilter(Intensity_OverTime{counterSet,counterTrack,counterK},ones(3,3)/9,'replicate');
             Intensity_OverTime_LPF{counterSet,counterTrack,counterK}(Intensity_OverTime{counterSet,counterTrack,counterK}==0)=nan;
         end
     end
 end
+%% Mesh 
+counterSet      = 4 ;
+counterTrack    = 3;
+counterK        = 2;
+frameInterval = 3.56; % this is the frame interval you have provided
+startpoint = 5*60/frameInterval; % this is the time of the first tick in minutes
+for counterSet      = 1:4
+    numTracks       = numel(Tracks{counterSet});
+    for counterTrack    =  1:numTracks
+        for counterK    = 1:2
+            h1 = figure;
+            h2 = gca;
+            h3 = mesh(Intensity_OverTime_LPF{counterSet,counterTrack,counterK});
+            axis tight;
+
+
+            h1.Position = [400  400  900  350];
+            h2.View = [110 60];
+            set(gca,'xtick',linspace(1,21,7))
+            set(gca,'xticklabel',num2str(round(180*linspace(-3.14,3.14,7)/pi)',3))
+            %h2.YTick = 20:50:1700;
+            %h2.YTickLabel = round((h2.YTick)*frameInterval/60);
+            %h2.YTick = startpoint:5*(60/frameInterval):1700;
+            %h2.YTickLabel = round((h2.YTick-200)*frameInterval/60);
+            xlabel('angle')
+            ylabel('time [min]')
+            zlabel('intensity')
+            title(strcat('Track',32,num2str(Tracks{counterSet}(counterTrack)),', Ch',32,num2str(counterK)))
+            colormap jet
+            filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_16.png');
+            print('-dpng','-r400',filename)
+        end
+    end
+end
+
 %% Plots
 figure
 hold on
