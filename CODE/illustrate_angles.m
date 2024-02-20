@@ -1,4 +1,6 @@
-
+close all
+clear all
+%%
 
 [xx_t,yy_t]         = meshgrid(-30:30,-30:30);
 angle_view          = angle(xx_t+1i*yy_t);
@@ -7,7 +9,7 @@ distance_view       = sqrt(xx_t.^2+yy_t.^2);
 dimensionsRing                          = [0 30];
 ring                = (distance_view>dimensionsRing(1)).*(distance_view<dimensionsRing(2));
 angle_view(ring==0)=nan;
-%angle_view(31,1:30)=nan;
+angle_view(31,1:30)=nan;
 
 surf(angle_view, 'EdgeColor','none')
  colormap jet
