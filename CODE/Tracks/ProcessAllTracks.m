@@ -10,7 +10,7 @@ cd ('C:\Users\sbbk034\OneDrive - City, University of London\Documents\GitHub\Rin
 a = readtable('Tracks\Dataset_One_Tracks_2024_01_12.xlsx');
 b = readtable('Tracks\Dataset_Two_Tracks_2024_01_12.xlsx');
 c = readtable('Tracks\Dataset_Three_Tracks_2024_01_12.xlsx');
-d = readtable('Tracks\Dataset_Four_Tracks_2024_01_17.xlsx');
+d = readtable('Tracks\Dataset_Four_Tracks_2024_02_16.xlsx');
 
 trackNames = {'Dataset_One_Whole','Dataset_Two_Whole','Dataset_Three_Whole','Dataset_Four_Whole'};
 
@@ -71,9 +71,9 @@ hx24 = xlabel('');
 
 
 
-for counterSet      = 4
+for counterSet      = 1:4
     numTracks       = numel(Tracks{counterSet});
-    for counterTrack    = 3% 1:numTracks
+    for counterTrack    =  1:numTracks
         clear F;
         currentSet      = AllDatasets{counterSet};
         currentTrack    = currentSet(currentSet(:,3)==Tracks{counterSet}(counterTrack),:);
@@ -135,6 +135,9 @@ for counterSet      = 4
         close(v);
     end
 end
+%%
+save('Intensity_OverTime_2024_02_20.mat',Intensity_OverTime)
+
 %% Process Intensities by filtering
 % if starting with the saved values 
  load('Intensity_OverTime_2024_01_18.mat')
