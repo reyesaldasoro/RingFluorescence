@@ -136,11 +136,12 @@ for counterSet      = 1:4
     end
 end
 %%
-save('Intensity_OverTime_2024_02_20.mat',Intensity_OverTime)
+save('Intensity_OverTime_2024_02_20.mat','Intensity_OverTime')
 
 %% Process Intensities by filtering
 % if starting with the saved values 
- load('Intensity_OverTime_2024_01_18.mat')
+% load('Intensity_OverTime_2024_02_20.mat')
+% load('Intensity_OverTime_2024_01_18.mat')
 % Requires PARAMETERS previous lines
 Tracks{1}           = [149 80 108 151];
 Tracks{2}           = 1;
@@ -160,9 +161,9 @@ for counterSet      = 1:4
     end
 end
 %% Mesh 
-counterSet      = 4 ;
-counterTrack    = 3;
-counterK        = 2;
+%counterSet      = 4 ;
+%counterTrack    = 3;
+%counterK        = 2;
 frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
 %frameInterval = 3.56; % this is the frame interval you have provided
 for counterSet      = 1:4
@@ -212,10 +213,10 @@ for counterSet      = 1:4
             zlabel('intensity')
             title(strcat('Track',32,num2str(Tracks{counterSet}(counterTrack)),', Ch',32,num2str(counterK)))
             colormap jet
-            filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_16.png');
-            %print('-dpng','-r400',filename)
-            filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_16.fig');
-            savefig(gcf,filename2)
+            filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.png');
+            print('-dpng','-r400',filename)
+            filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.fig');
+            %savefig(gcf,filename2)
         end
     end
 end
