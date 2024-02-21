@@ -1,4 +1,3 @@
-
 %% Process all tracks
 clear all
 close all
@@ -27,12 +26,12 @@ AllDatasets{4}      = Dataset_Four_Tracks_2024_01_17;
 
 
 %% Parameters
-Tracks{1}           = [149 80 108 151];
+Tracks{1}           = [76 149 80 108 151];
 Tracks{2}           = 1;
 Tracks{3}           = 0;
 Tracks{4}           = [20 21 25];
 
-TracksInLine        = [149 80 108 151 1 0 20 21 25];
+TracksInLine        = [76 149 80 108 151 1 0 20 21 25];
 frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you have provided
 callibrationXY      = 0.1729938;
 
@@ -136,14 +135,14 @@ for counterSet      = 1:4
     end
 end
 %%
-save('Intensity_OverTime_2024_02_20.mat','Intensity_OverTime')
+save('Intensity_OverTime_2024_02_21.mat','Intensity_OverTime')
 
 %% Process Intensities by filtering
 % if starting with the saved values 
 % load('Intensity_OverTime_2024_02_20.mat')
 % load('Intensity_OverTime_2024_01_18.mat')
 % Requires PARAMETERS previous lines
-Tracks{1}           = [149 80 108 151];
+Tracks{1}           = [76 149 80 108 151];
 Tracks{2}           = 1;
 Tracks{3}           = 0;
 Tracks{4}           = [20 21 25];
