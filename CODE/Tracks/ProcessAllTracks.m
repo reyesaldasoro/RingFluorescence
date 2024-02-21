@@ -215,7 +215,7 @@ for counterSet      = 1:4
             filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.png');
             print('-dpng','-r400',filename)
             filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.fig');
-            %savefig(gcf,filename2)
+            savefig(gcf,filename2)
         end
     end
 end
