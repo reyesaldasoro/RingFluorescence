@@ -167,8 +167,8 @@ frameInterval       = {3.56,2.85,8.35,7.35}; % this is the frame interval you ha
 %frameInterval = 3.56; % this is the frame interval you have provided
 for counterSet      = 1:4
     startpoint = 5*60/frameInterval{counterSet}; % this is the time of the first tick in minutes
-        currentFrames       = 1:size(currentTrack,1);
-        currentTime         = (currentFrames*frameInterval{counterSet}/60)';
+       % currentFrames       = 1:size(currentTrack,1);
+       % currentTime         = (currentFrames*frameInterval{counterSet}/60)';
     numTracks       = numel(Tracks{counterSet});
     for counterTrack    =  1:numTracks
         for counterK    = 1:2
@@ -212,10 +212,10 @@ for counterSet      = 1:4
             zlabel('intensity')
             title(strcat('Track',32,num2str(Tracks{counterSet}(counterTrack)),', Ch',32,num2str(counterK)))
             colormap jet
-            filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.png');
-            print('-dpng','-r400',filename)
-            filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.fig');
-            savefig(gcf,filename2)
+            % filename = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.png');
+            % print('-dpng','-r400',filename)
+            % filename2 = strcat('Track_',num2str(Tracks{counterSet}(counterTrack)),'_Ch_',num2str(counterK),'_2024_02_20.fig');
+            % savefig(gcf,filename2)
         end
     end
 end
